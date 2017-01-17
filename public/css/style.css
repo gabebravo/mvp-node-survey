@@ -1,0 +1,142 @@
+/* background image is a color gradient */
+body {
+    background-color: #D5D5D5;
+    min-height: 100vh;
+    font-family: 'Lato', sans-serif;
+    margin-top: 14vh;
+}
+
+/*************************************************
+ ******** MOBILE FIRST: ALL MAIN STYLES **********
+ *************************************************/
+
+ /*----------- login styles -----------*/
+
+ .login-text, .register-text {
+  display: flex;
+  align-items: center;
+  min-height: 24em;
+  justify-content: center;
+ }
+
+ .login-container, .register-container {
+   /*max-width: 35%;*/
+   min-width: 25%;
+   min-height: 35%;
+   background-color: #fff;
+   border-radius: .5rem;
+   padding-right: 2rem;
+   padding-left: 2rem;
+ }
+
+ .login-text, .register-text {
+   color: #444;
+   text-align: center;
+ }
+
+ .login-text > h1, .register-text > h1 {
+     font-size: 1.7em;
+ }
+ .login-text > h3, .register-text > h3 {
+     font-size: 1.3em;
+ }
+
+ .login-form input, .register-form input {
+     width: 65%;
+     height: 2rem;
+     border: 1px solid rgb(197,200,204);
+     display: block;
+     margin: 0 auto;
+     border: 1px solid rgb(197,200,204);
+     margin-bottom: .5rem;
+     padding-left: 15px;
+ }
+
+ .login-btn {
+     background-color: #286090;
+     color: #fff;
+     width: 71%;
+     height: 2rem;
+     border: none;
+     width: 71%;
+     height: 2.3rem;
+     display: block;
+     margin: 0 auto;
+ }
+
+ .register-btn {
+     background-color: #286090;
+     color: #fff;
+     width: 71%;
+     height: 2rem;
+     border: none;
+     width: 71%;
+     height: 2.3rem;
+     display: block;
+     margin: 0 auto;
+     margin-bottom: 2rem;
+ }
+
+ .login-links {
+   display: flex;
+   align-items: center;
+   justify-content: center;
+ }
+
+ .login-links span {
+    text-decoration: none;
+    cursor: pointer;
+    margin-left: 0.5rem;
+    margin-right: 0.5rem;
+    color: #E37222;
+    font-size: 0.9rem;
+    font-weight: 700;
+ }
+
+ /*----------- userpage styles -----------*/
+
+ .user-text {
+  display: flex;
+  align-items: center;
+  min-height: 24em;
+  justify-content: center;
+ }
+
+ .user-container {
+   max-width: 35%;
+   min-height: 35%;
+   background-color: #fff;
+   border-radius: .5rem;
+   padding-right: 2rem;
+   padding-left: 2rem;
+ }
+
+ /*----------- adminpage styles -----------*/
+
+ .admin-text {
+  display: flex;
+  align-items: center;
+  min-height: 24em;
+  justify-content: center;
+ }
+
+ .admin-container {
+   max-width: 35%;
+   min-height: 35%;
+   background-color: #fff;
+   border-radius: .5rem;
+   padding-right: 2rem;
+   padding-left: 2rem;
+ }
+
+/* TABET & DESKTOP VIEWS */
+@media screen and (max-width: 750px)  {
+
+/*-------- Homepage --------*/
+
+    .login-container {
+      max-width: 74%;
+      min-height: 50vh;
+      background-color: #fff;
+      border-radius: .5rem;
+    }

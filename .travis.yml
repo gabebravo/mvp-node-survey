@@ -2,3 +2,10 @@ language: node_js
 node_js: node
 services:
 - mongodb
+deploy:
+  provider: heroku
+  api_key:
+    secure: fA3AnU5usgceKo1KV64XVJ1oZ8w9LFfkD2UfMmtn8FQfjaRbtYBo/NDYYZ1oqG+/8SKM/KFvXhCPLKbB3eYrVvfvamCxpVF6MnPrtvAZzpX90K44wicXk7VRGDqxjJaFePwOoj8YUYrImJlFOqqUQbqsEwuFl9gt4DlY+yLkelha2p6ItOSgG5CMg+N6uDQ/Z0O9dyep5N5g4/dUzhH8CJKOX4uBSU3IOchXu1Vfhpq03oSuBYr2C8gwrCwjVvxI1Ju0D6V/Wnw/u/xGYm6HIxC3fC9c+7AmtF0H41FUc1I80Kzr+eRc0MJ9CHVEEfR1m6KskEAhWYQxrMmnLg/nBqVydJLc96XonSAWtKjo7h9sXFAnx0q057BOvgouvWMvl066Tu49iMjRdgTYl1PCW8+Q9Wd8OlXri1EoVarxWVUmeW2OX3dqu1oKEs8i/f3lBs2p4mV2hMuchNREQr3RfSQL2OWrA/AU0QpxH3f+hjcJHvEh6A38MPM9SAWlrKYuAM1ktd+SNAvFx5GXWlxpCRdQO7SS+oghp/8PmJ2K0kGtkPnudtocgYTcyFbvb583sH0UwL9V+50O5vr89TpYEbxgQbrT6eO/SLI58YOBDD9aP4OP8HKbFwPSNTP5bolhWZs0uRjqz0Ilbzx/axpFJBjpEzuLD4lGKZsl1ptQRHM=
+  app: morning-inlet-39864
+  on:
+    repo: gbravodev/mvp-node-survey

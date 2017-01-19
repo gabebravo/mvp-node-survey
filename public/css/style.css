@@ -10,7 +10,7 @@ body {
  ******** MOBILE FIRST: ALL MAIN STYLES **********
  *************************************************/
 
- /*----------- login styles -----------*/
+ /*----------- login & register styles -----------*/
 
  .login-text, .register-text {
   display: flex;
@@ -58,8 +58,6 @@ body {
      width: 71%;
      height: 2rem;
      border: none;
-     width: 71%;
-     height: 2.3rem;
      display: block;
      margin: 0 auto;
  }
@@ -70,8 +68,6 @@ body {
      width: 71%;
      height: 2rem;
      border: none;
-     width: 71%;
-     height: 2.3rem;
      display: block;
      margin: 0 auto;
      margin-bottom: 2rem;
@@ -92,6 +88,27 @@ body {
     font-size: 0.9rem;
     font-weight: 700;
  }
+
+ /*----------- piechart styles -----------*/
+
+ canvas#surveyChart {
+     min-height: 70vh;
+     min-width: 25%;
+ }
+
+.survey-btns {
+    text-align: -webkit-center;
+    margin-top: 3rem;
+    margin-bottom: 3rem;
+}
+
+.survey-btns button {
+  background-color: #286090;
+  color: #fff;
+  width: 35%;
+  height: 2rem;
+  border: none;
+}
 
  /*----------- userpage styles -----------*/
 
@@ -129,14 +146,46 @@ body {
    padding-left: 2rem;
  }
 
+  /*----------- dashboard styles -----------*/
+ /* Parent selector and styles */
+ .row {
+ 	display: flex;
+ 	flex-direction: row;
+  border-bottom: solid 1px grey;
+ }
+ /* Child to Parent selector and styles */
+ .col {
+ 	flex: 1;
+ 	padding: .6em;
+ }
+ /* column styling */
+ .col {
+ 	background-color: #fff;
+ 	color: grey;
+ 	font-family: helvetica, Sans-Serif;
+ 	text-align: center;
+ }
+ .set-btns-vert {
+ 	margin-top: 6%;
+ }
+ button.view-survey {
+    margin-right: 1rem;
+}
+
+ /* TABLET BREAKPOINT */
+
+ /* LAPTOP / DESKTOP */
+
+ /*  SUPER BIG SCREENS */
+
 /* TABET & DESKTOP VIEWS */
 @media screen and (max-width: 750px)  {
 
 /*-------- Homepage --------*/
 
-    .login-container {
-      max-width: 74%;
-      min-height: 50vh;
-      background-color: #fff;
-      border-radius: .5rem;
-    }
+.login-container {
+  max-width: 74%;
+  min-height: 50vh;
+  background-color: #fff;
+  border-radius: .5rem;
+}

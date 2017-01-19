@@ -16,7 +16,7 @@ var render = {
 			loginElement += '<div class="login-links">';
 			loginElement += '<p class="register-link"><span>Register Now</span></p>';
 			loginElement += '<p class="password-link"><span>Forgot Password</span></p>';
-			loginElement += '</div></div>';
+			loginElement += '</div></div></div>';
 		$('.login').html(loginElement);
 
 		// register btn click
@@ -51,22 +51,67 @@ var render = {
 		});
 	},
 
-	userPage: function() {
-		var userElement = '';
-			userElement += '<div class="user-text">';
-			userElement += '<div class="user-container">';
-			userElement += '<h1>This is the User Page</h1>';
-			userElement += '</div></div>';
-		$('.userpage').html(userElement);
+	dashboardView: function(user, name, events) {
+		var eventsElement = '';
+		eventsElement += '<h3>Welcome back ' + name + '!</h3>';
+		if (user) {
+			events.forEach( function(value) {
+				eventsElement += '<div class="row" eventId='+ value.id +'>';
+				eventsElement += '<div class="col"><h3>' + value.name + '</h3></div>';
+				eventsElement += '<div class="col"><p>' + value.description + '</p></div>';
+				eventsElement += '<div class="col"><p>Vote Count: '+ value.count.yes +' in favor / ';
+				eventsElement += value.count.no + ' opposed</p></div>';
+				eventsElement += '<div class="col">';
+				eventsElement += '<div class="set-btns-vert">';
+				eventsElement += '<button class="view-survey">VIEW STATS</button>';
+				eventsElement += '<button class="sruvey-vote">VOTE NOW</button>';
+				eventsElement += '</div></div></div>';
+    	});
+		} else {
+			events.forEach( function(value) {
+				eventsElement += '<div class="row" eventId='+ value.id +'>';
+				eventsElement += '<div class="col"><h3>' + value.name + '</h3></div>';
+				eventsElement += '<div class="col"><p>' + value.description + '</p></div>';
+				eventsElement += '<div class="col"><p>Vote Count: '+ value.count.yes +' in favor / ';
+				eventsElement += value.count.no + ' opposed</p></div>';
+				eventsElement += '<div class="col">';
+				eventsElement += '<div class="set-btns-vert">';
+				eventsElement += '<button class="view-survey">VIEW STATS</button>';
+				eventsElement += '<button class="sruvey-vote">VOTE NOW</button>';
+				eventsElement += '</div></div></div>';
+    	});
+		}
+		$('.dashboard').html(eventsElement);
+
+		$('.view-survey').on('click', function(e) {
+			e.preventDefault();
+			app.showSurvey();
+		});
 	},
 
-	adminPage: function() {
-		var adminElement = '';
-			adminElement += '<div class="admin-text">';
-			adminElement += '<div class="admin-container">';
-			adminElement += '<h1>This is the Admin Page</h1>';
-			adminElement += '</div></div>';
-		$('.adminpage').html(adminElement);
+	sureyView: function( surveyObj ) {
+		var surveyElement = '';
+			surveyElement += '<div class="user-text">';
+			surveyElement += '<div class="user-container">';
+			surveyElement += '<h1>' + surveyObj.name + '</h1>';
+			surveyElement += '<h1>' + surveyObj.description + '</h1>';
+			surveyElement += '<canvas id="surveyChart"></canvas>';
+			surveyElement += '<div class="survey-btns">';
+			if (true) {
+				surveyElement += '<button class="view-survey">VOTE YES</button>';
+				surveyElement += '<button class="sruvey-vote">VOTE NO</button>';
+		  } else {
+				surveyElement += '<button class="return-dash">RETURN TO DASHBOARD</button>';
+			}
+			surveyElement += '</div></div></div>';
+		$('.survey').html(surveyElement);
+		var ctx = $("#surveyChart");
+		app.buildChart(ctx, {
+			noName: "Yes",
+			noVotes: Number(surveyObj.count.yes),
+			yesName: "No",
+			yesVotes: Number(surveyObj.count.no)
+		});
 	}
 
 }

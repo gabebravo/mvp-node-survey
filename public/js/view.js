@@ -78,7 +78,8 @@ var render = {
 		eventsElement += '</div>';
 
 			events.forEach( function(value) {
-				var voteBtn = app.isSurveyActive(value.expiration);
+				var active = app.isSurveyActive(value.expiration);
+				var areUsers = app.isSurveyEmpty(value.users);
 				eventsElement += '<div class="row" eventId='+ value.id +'>';
 				eventsElement += '<div class="col"><h3>' + value.name + '</h3></div>';
 				eventsElement += '<div class="col"><p>' + value.description + '</p></div>';
@@ -96,10 +97,12 @@ var render = {
 				eventsElement += '<div class="set-btns-vert">';
 				eventsElement += '<button class="view-survey">VIEW STATS</button>';
 				if (admin) {
-						eventsElement += '<button class="delete-survey">DELETE SURVEY</button>';
+						if(!areUsers) {
+							eventsElement += '<button class="delete-survey">DELETE SURVEY</button>';
+						}
 				} else {
-					if (voteBtn) {
-						eventsElement += '<button class="sruvey-vote">VOTE NOW</button>';
+					if (active) {
+						eventsElement += '<button class="survey-vote">VOTE NOW</button>';
 					}
 				}
 				eventsElement += '</div></div></div>';
@@ -118,7 +121,11 @@ var render = {
 		});
 		$('.view-survey').on('click', function(e) {
 			e.preventDefault();
-			app.showSurvey(e.target);
+		  app.showSurvey(e.target, false);
+		});
+		$('.survey-vote').on('click', function(e) {
+			e.preventDefault();
+		  app.showSurvey(e.target, true);
 		});
 		$('.logout-link').on('click', function(e) {
 			e.preventDefault();
@@ -126,23 +133,46 @@ var render = {
 		});
 	},
 
-	surveyView: function( surveyObj ) {
-		var $surveyEl = (`
-			<div class = "survey-text">
-				<div class="survey-container">
-	    		<h1>${surveyObj.name}</h1>
-	    		<h1>${surveyObj.description}</h1>
-	    <canvas id="surveyChart"></canvas>
-	    <div class="survey-btns">
+	surveyView: function( surveyObj, canVote ) {
+		var $surveyEl;
+		if (canVote) {
+			$surveyEl = (`
+				<div class = "survey-text">
+					<div class="survey-container">
+		    		<h1>${surveyObj.name}</h1>
+		    		<h1>${surveyObj.description}</h1>
+		    <canvas id="surveyChart"></canvas>
+				<div class="survey-btns">
 	        <button class="survey-vote">VOTE YES</button>
 	        <button class="survey-vote">VOTE NO</button>
 	    </div>
-				</div></div>
-		`);
+					</div></div>
+			`);
+		} else {
+			$surveyEl = (`
+				<div class = "survey-text">
+					<div class="survey-container">
+		    		<h1>${surveyObj.name}</h1>
+		    		<h1>${surveyObj.description}</h1>
+		    <canvas id="surveyChart"></canvas>
+		    <div class="dash-btn">
+		        <button class="return-dash">RETURN HOME</button>
+		    </div>
+					</div></div>
+			`);
+		}
 		$('.survey').html($surveyEl);
-		$('.survey-vote').on( 'click', function(e) {
+
+		$('.return-dash').on( 'click', function(e) {
+			e.preventDefault();
 			$('.survey').empty();
-			render.loginView();
+			app.loginRedirect();
+			window.location.hash = '';
+		});
+		$('.survey-vote').on( 'click', function(e) {
+			e.preventDefault();
+			$('.survey').empty();
+			app.loginRedirect();
 			window.location.hash = '';
 		});
 
@@ -196,7 +226,8 @@ var render = {
 	        <input type="date" id="sForm-exp" placeholder="Format: dd-mm-yyyy">
 	      </li>
 	      <li>
-	        <button type="submit">Submit</button>
+			    <div class="srvyfrm-return-btn"><button type="submit">Return Home</button></div>
+	        <button class="srvyfrm-submit-btn" type="submit">Submit</button>
 	      </li>
 	    </ul>
 	  </form>
@@ -204,28 +235,18 @@ var render = {
 `);
 		$('.dashboard').html($newSurveyEl);
 
-		// $('#save').on('click', function(e) {
-		// 	e.preventDefault();
-		// 		app.createSurvey();
-		// });
+		$('.srvyfrm-return-btn').on( 'click', function(e) {
+			e.preventDefault();
+			$('.survey').empty();
+			app.loginRedirect();
+			window.location.hash = '';
+		});
+		$('.srvyfrm-submit-btn').on('click', function(e) {
+			e.preventDefault();
+			$('.survey').empty();
+			app.loginRedirect();
+			window.location.hash = '';
+		});
 	}
 
 }
-
-{/* <div class="survey-text">
-	<div class="new-survey-container">
-		<h1>Create New Survey</h1>
-		<span><h3>Fill out the fields below</h3><span>
-			<div class="survey-form">
-				<label>Survey Name: </label>
-					<input type="text" class="survey-name" placeholder="Name">
-				<label>Survey Description: </label>
-					<input type="text" class="survey-description" placeholder="Description">
-				<label>Survey Items: </label>
-					<input type="text" class="survey-items" placeholder="Items comma seperated">
-				<label>Survey Expiration Date: </label>
-					<input type="text" class="survey-exp-date" placeholder="Expiration Date">
-				<button class="register-btn" id="save">Save</button>
-			</div>
-	 </div>
-</div> */}

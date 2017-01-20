@@ -114,6 +114,16 @@ body {
      min-width: 25%;
  }
 
+button.return-dash {
+    text-align: -webkit-center;
+    margin-top: 3rem;
+    margin-bottom: 3rem;
+    background-color: #286090;
+    color: #fff;
+    width: 35%;
+    height: 2rem;
+    border: none;
+}
 .survey-btns {
     text-align: -webkit-center;
     margin-top: 3rem;
@@ -271,6 +281,11 @@ h1.header-item {
 
 .flex-inner li {
   width: 100px;
+}
+
+.srvyfrm-return-btn {
+    position: absolute;
+    left: 49%;
 }
 
  /* TABLET BREAKPOINT */

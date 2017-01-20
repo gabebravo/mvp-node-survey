@@ -56,6 +56,21 @@ const model = {
       		{"answerItem": "No", "count": "3"}
       	],
       	"expiration" : "1502668800000"
+      },
+      {
+      	"id" : "587fdbc9af29b4d290aadf9b",
+      	"name" : "Weekdays",
+      	"description" : "What's the best weekday?",
+      	"users" : [
+      	],
+        "stats" : [
+      		{"answerItem": "Monday", "count": "0"},
+      		{"answerItem": "Tuesday", "count": "0"},
+          {"answerItem": "Wednesday", "count": "0"},
+      		{"answerItem": "Thursday", "count": "0"},
+          {"answerItem": "Friday", "count": "0"}
+      	],
+      	"expiration" : "1502668800000"
       }
     ],
 

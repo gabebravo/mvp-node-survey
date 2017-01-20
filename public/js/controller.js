@@ -106,13 +106,13 @@ var app = ( function () {
 	return surveyChart;
  }
 
- function publicGetSurvey( elem ) {
+ function publicGetSurvey( elem, bool ) {
 	 var surveyId = $(elem).closest('.row').attr('eventid');
 
 	 model.dashboardData.forEach( function(obj, index ) {
 		 if( surveyId === obj.id ) {
 			$('.dashboard').empty();
-	 		render.surveyView(model.dashboardData[index]);
+	 		render.surveyView(model.dashboardData[index], bool);
 	 		window.location.hash = 'survey';
 		 }
 	 });
@@ -138,6 +138,20 @@ var app = ( function () {
 	 } else return false;
  }
 
+ function publicCheckSurveyHasUsers( surveyUserCount ) {
+	 if(surveyUserCount.length > 0)
+	 	return false;
+	 else
+	 	return true;
+ }
+
+	publicCheckSurveyHasUsers = ( surveyUserCount ) => {
+	 if(surveyUserCount.length > 0)
+	 	return true;
+	 else
+	 	return false;
+ }
+
  function publicCreateSurvey() {
 
  }
@@ -161,6 +175,7 @@ var app = ( function () {
 				showSurvey: publicGetSurvey,
 				logout:	publicLogoutUser,
 				isSurveyActive: publicCheckSurveyExpiration,
+				isSurveyEmpty: publicCheckSurveyHasUsers,
 				deleteSurvey: publicRemoveSurvey,
 				createSurvey: publicCreateSurvey
 		};

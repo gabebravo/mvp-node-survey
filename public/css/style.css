@@ -110,7 +110,7 @@ body {
  /*----------- piechart styles -----------*/
 
  canvas#surveyChart {
-     min-height: 70vh;
+     min-height: 50vh;
      min-width: 25%;
  }
 

@@ -59,20 +59,46 @@ var app = ( function () {
 	}
 
 	function publicBuildChart(ctxObj, data ) {
+
+	  var bgColor = ['rgba(54, 162, 235, 1)',
+								'rgba(255,99,132,1)',
+	 						 'rgba(255, 206, 86, 1)',
+	 						 'rgba(75, 192, 192, 1)',
+	 						 'rgba(255, 159, 64, 1)']
+
+	 var hvrColor = ['rgba(54, 162, 235, 0.2)',
+	 						 'rgba(255, 99, 132, 0.2)',
+	 						 'rgba(255, 206, 86, 0.2)',
+	 						 'rgba(75, 192, 192, 0.2)',
+	 						 'rgba(255, 159, 64, 0.2)'];
+
+	 var bgColors = [];
+	 var hvrColors = [];
+
+	 for(var i = 0; i < data.size; i++) {
+		 bgColors.push(bgColor[i]);
+		 hvrColors.push(hvrColor[i]);
+	 }
+
+		var labels = [];
+		var counts = [];
+
+		for (let key of data.keys()) {
+        labels.push(key);
+    }
+
+		for (let value of data.values()) {
+				counts.push(value);
+		}
+
 		var surveyChart = new Chart(ctxObj, {
 			type: 'pie',
 			data: {
-				labels: [data.noName, data.yesName],
+				labels: labels,
 				datasets: [{
-						data: [data.noVotes, data.yesVotes],
-						backgroundColor: [
-								"#FF6384",
-								"#36A2EB"
-						],
-						hoverBackgroundColor: [
-								"#FF6384",
-								"#36A2EB"
-						]
+						data: counts,
+						backgroundColor: bgColors,
+						hoverBackgroundColor: hvrColors
 				}]
 			},
 			options: { }
@@ -80,15 +106,48 @@ var app = ( function () {
 	return surveyChart;
  }
 
- function publicGetSurvey() {
+ function publicGetSurvey( elem ) {
+	 var surveyId = $(elem).closest('.row').attr('eventid');
+
+	 model.dashboardData.forEach( function(obj, index ) {
+		 if( surveyId === obj.id ) {
+			$('.dashboard').empty();
+	 		render.surveyView(model.dashboardData[index]);
+	 		window.location.hash = 'survey';
+		 }
+	 });
+
 	//  $.getJSON(SURVEY_URL, function(data) {
 	//  	$('.dashboard').empty();
 	// 	render.sureyView(data);
 	//  	window.location.hash = 'survey';
 	//  });
+ }
+
+ function publicLogoutUser() {
 		$('.dashboard').empty();
-		render.sureyView(model.surveyData);
-		window.location.hash = 'survey';
+		render.loginView();
+		window.location.hash = '/';
+ }
+
+ function publicCheckSurveyExpiration( surveyExpDate ) {
+	 // for test purposes: console.log(Date.UTC(2017, 07, 14));
+	 var todaysDate = new Date();
+	 if ( surveyExpDate > todaysDate.getTime() ) {
+		 return true;
+	 } else return false;
+ }
+
+ function publicCreateSurvey() {
+
+ }
+
+ function publicRemoveSurvey( elem ) {
+	var surveyId = $(elem).closest('.row').attr('eventid');
+	// $.delete(DELETE_URL, function(data) {
+	 		// call mongo and remove by ID
+			elem.closest('.row').remove();
+	// });
  }
 
 	return {
@@ -99,7 +158,11 @@ var app = ( function () {
 				registerRedirect: publicRegisterUser,
 				registerUser: publicRegisterNewUser,
 				buildChart: publicBuildChart,
-				showSurvey: publicGetSurvey
+				showSurvey: publicGetSurvey,
+				logout:	publicLogoutUser,
+				isSurveyActive: publicCheckSurveyExpiration,
+				deleteSurvey: publicRemoveSurvey,
+				createSurvey: publicCreateSurvey
 		};
 
 })();

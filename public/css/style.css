@@ -29,7 +29,7 @@ body {
    padding-left: 2rem;
  }
 
- .login-text, .register-text {
+ .login-text, .register-text, .survey-text {
    color: #444;
    text-align: center;
  }
@@ -89,6 +89,24 @@ body {
     font-weight: 700;
  }
 
+ /*----------- surveypage styles -----------*/
+
+ .survey-text {
+  display: flex;
+  align-items: center;
+  min-height: 24em;
+  justify-content: center;
+ }
+
+ .survey-container {
+   max-width: 35%;
+   min-height: 35%;
+   background-color: #fff;
+   border-radius: .5rem;
+   padding-right: 2rem;
+   padding-left: 2rem;
+ }
+
  /*----------- piechart styles -----------*/
 
  canvas#surveyChart {
@@ -110,42 +128,6 @@ body {
   border: none;
 }
 
- /*----------- userpage styles -----------*/
-
- .user-text {
-  display: flex;
-  align-items: center;
-  min-height: 24em;
-  justify-content: center;
- }
-
- .user-container {
-   max-width: 35%;
-   min-height: 35%;
-   background-color: #fff;
-   border-radius: .5rem;
-   padding-right: 2rem;
-   padding-left: 2rem;
- }
-
- /*----------- adminpage styles -----------*/
-
- .admin-text {
-  display: flex;
-  align-items: center;
-  min-height: 24em;
-  justify-content: center;
- }
-
- .admin-container {
-   max-width: 35%;
-   min-height: 35%;
-   background-color: #fff;
-   border-radius: .5rem;
-   padding-right: 2rem;
-   padding-left: 2rem;
- }
-
   /*----------- dashboard styles -----------*/
  /* Parent selector and styles */
  .row {
@@ -165,11 +147,130 @@ body {
  	font-family: helvetica, Sans-Serif;
  	text-align: center;
  }
+
  .set-btns-vert {
  	margin-top: 6%;
  }
+
+ .set-btns-vert button {
+   background-color: #286090;
+   color: #fff;
+   width: 35%;
+   height: 2rem;
+   border: none;
+ }
+
  button.view-survey {
     margin-right: 1rem;
+}
+
+.header {
+    background-color: black;
+    color: #E37222;
+    display: flex;
+   	flex-direction: row;
+}
+
+.header-item {
+  flex: 1;
+  padding: .6em;
+  margin-right: 2rem;
+}
+h1.header-item {
+  font-size: 1.3rem !important;
+  margin-left: 2rem;
+}
+
+/*----------- newSurvey styles -----------*/
+
+.new-survey-container {
+  width: 35%;
+  min-height: 35%;
+  background-color: #fff;
+  border-radius: .5rem;
+  padding-right: 3rem;
+  padding-left: 1rem;
+}
+
+.survey-form input {
+    width: 65%;
+    height: 2rem;
+    border: 1px solid rgb(197,200,204);
+    margin: 0 auto;
+    border: 1px solid rgb(197,200,204);
+    margin-bottom: .5rem;
+    padding-left: 15px;
+}
+
+.flex-outer,
+.flex-inner {
+  list-style-type: none;
+  padding: 0;
+}
+
+.flex-outer {
+  max-width: 800px;
+  /*margin: 0 auto;*/
+}
+
+.flex-outer li,
+.flex-inner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.flex-inner {
+  padding: 0 8px;
+  justify-content: space-between;
+}
+
+.flex-outer > li:not(:last-child) {
+  margin-bottom: 20px;
+}
+
+.flex-outer li label,
+.flex-outer li p {
+  padding: 8px;
+  font-weight: 300;
+  letter-spacing: .09em;
+  text-transform: uppercase;
+}
+
+.flex-outer > li > label,
+.flex-outer li p {
+  flex: 1 0 120px;
+  max-width: 220px;
+}
+
+.flex-outer > li > label + *,
+.flex-inner {
+  flex: 1 0 220px;
+}
+
+.flex-outer li p {
+  margin: 0;
+}
+
+.flex-outer li input:not([type='checkbox']),
+.flex-outer li textarea {
+  border: 1px solid rgb(197,200,204);
+  padding: 15px;
+}
+
+.flex-outer li button {
+  margin-left: auto;
+  padding: 8px 16px;
+  border: none;
+  background: #286090;
+  color: #fff;
+  text-transform: uppercase;
+  letter-spacing: .09em;
+  border-radius: 2px;
+}
+
+.flex-inner li {
+  width: 100px;
 }
 
  /* TABLET BREAKPOINT */

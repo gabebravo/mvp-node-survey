@@ -67,7 +67,7 @@ var render = {
 	},
 
 	dashboardView: function(admin, name, events) {
-		admin = true;
+		admin = false;
 
 		var eventsElement = '';
 		eventsElement += '<div class="header"><h1 class="header-item">Welcome back ' + name + '!</h1>';
@@ -134,34 +134,29 @@ var render = {
 	},
 
 	surveyView: function( surveyObj, canVote ) {
-		var $surveyEl;
+		var surveyEl = '';
 		if (canVote) {
-			$surveyEl = (`
-				<div class = "survey-text">
-					<div class="survey-container">
-		    		<h1>${surveyObj.name}</h1>
-		    		<h1>${surveyObj.description}</h1>
-		    <canvas id="surveyChart"></canvas>
-				<div class="survey-btns">
-	        <button class="survey-vote">VOTE YES</button>
-	        <button class="survey-vote">VOTE NO</button>
-	    </div>
-					</div></div>
-			`);
+			surveyEl +='<div class = "survey-text">';
+			surveyEl +=	'<div class="survey-container">';
+		  surveyEl +=	'<h1>' + surveyObj.name + '</h1>';
+		  surveyEl +=	'<h1>' + surveyObj.description + '</h1>';
+		  surveyEl +=	'<canvas id="surveyChart"></canvas>';
+			surveyEl +=	'<div class="survey-btns">';
+					surveyObj["stats"].forEach( function(obj) {
+						surveyEl +=	'<button class="survey-vote" survey-btn="' + obj["answerItem"] + '">'+ obj["answerItem"] +'</button>';
+					});
+	    surveyEl += '</div></div></div>';
 		} else {
-			$surveyEl = (`
-				<div class = "survey-text">
-					<div class="survey-container">
-		    		<h1>${surveyObj.name}</h1>
-		    		<h1>${surveyObj.description}</h1>
-		    <canvas id="surveyChart"></canvas>
-		    <div class="dash-btn">
-		        <button class="return-dash">RETURN HOME</button>
-		    </div>
-					</div></div>
-			`);
+			surveyEl += '<div class="survey-text">';
+			surveyEl +=	'<div class="survey-container">';
+			surveyEl +=	'<h1>' + surveyObj.name + '</h1>';
+			surveyEl +=	'<h1>' + surveyObj.description + '</h1>';
+			surveyEl +=	'<canvas id="surveyChart"></canvas>';
+		  surveyEl +=	'<div class="dash-btn">';
+		  surveyEl +=	'<button class="return-dash">RETURN HOME</button>';
+		  surveyEl +=	'</div></div></div>';
 		}
-		$('.survey').html($surveyEl);
+		$('.survey').html(surveyEl);
 
 		$('.return-dash').on( 'click', function(e) {
 			e.preventDefault();

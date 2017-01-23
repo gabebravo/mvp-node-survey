@@ -1,6 +1,6 @@
 /* background image is a color gradient */
 body {
-    background-color: #D5D5D5;
+    background-color: #37B2A5;
     min-height: 100vh;
     font-family: 'Lato', sans-serif;
     margin-top: 14vh;
@@ -20,17 +20,15 @@ body {
  }
 
  .login-container, .register-container {
-   /*max-width: 35%;*/
    min-width: 25%;
    min-height: 35%;
-   background-color: #fff;
    border-radius: .5rem;
    padding-right: 2rem;
    padding-left: 2rem;
  }
 
  .login-text, .register-text, .survey-text {
-   color: #444;
+   color: #fff;
    text-align: center;
  }
 
@@ -84,7 +82,6 @@ body {
     cursor: pointer;
     margin-left: 0.5rem;
     margin-right: 0.5rem;
-    color: #E37222;
     font-size: 0.9rem;
     font-weight: 700;
  }
@@ -106,6 +103,10 @@ body {
    padding-right: 2rem;
    padding-left: 2rem;
  }
+
+ .survey-container h1 {
+    color: #444;
+}
 
  /*----------- piechart styles -----------*/
 
@@ -155,7 +156,7 @@ button.return-dash {
  /* column styling */
  .col {
  	background-color: #fff;
- 	color: grey;
+ 	color: #444;
  	font-family: helvetica, Sans-Serif;
  	text-align: center;
  }
@@ -178,7 +179,7 @@ button.return-dash {
 
 .header {
     background-color: black;
-    color: #E37222;
+    color: #fff;
     display: flex;
    	flex-direction: row;
 }
@@ -218,6 +219,7 @@ h1.header-item {
 .flex-inner {
   list-style-type: none;
   padding: 0;
+  color: #444;
 }
 
 .flex-outer {
@@ -275,10 +277,10 @@ h1.header-item {
   padding: 8px 16px;
   border: none;
   background: #286090;
-  color: #fff;
   text-transform: uppercase;
   letter-spacing: .09em;
   border-radius: 2px;
+  color: #fff;
 }
 
 .flex-inner li {
@@ -290,20 +292,120 @@ h1.header-item {
     left: 49%;
 }
 
- /* TABLET BREAKPOINT */
+/* TABET VIEWS */
+@media only screen
+  and (min-device-width: 768px)
+  and (max-device-width: 1024px)
+  and (orientation: portrait)
+  and (-webkit-min-device-pixel-ratio: 1) {
 
- /* LAPTOP / DESKTOP */
+    body {
+        background-color: #37B2A5;
+        font-family: 'Lato', sans-serif;
+        margin-top: 0vh !important;
+    }
 
- /*  SUPER BIG SCREENS */
+    .survey-container {
+      max-width: 50%;
+      min-height: 35%;
+      background-color: #fff;
+      border-radius: .5rem;
+      padding-right: 2rem;
+      padding-left: 2rem;
+    }
 
-/* TABET & DESKTOP VIEWS */
-@media screen and (max-width: 750px)  {
+    canvas#surveyChart {
+      min-height: 25vh;
+      min-width: 35%;
+      display: inline-block !important;
+    }
 
-/*-------- Homepage --------*/
+    .set-btns-vert button {
+      background-color: #286090;
+      color: #fff;
+      width: 40%;
+      height: 2rem;
+      border: none;
+    }
 
-.login-container {
-  max-width: 74%;
-  min-height: 50vh;
-  background-color: #fff;
-  border-radius: .5rem;
+    .new-survey-container {
+      width: 35%;
+      min-height: 35%;
+      background-color: #fff;
+      border-radius: .5rem;
+      padding-right: 3rem;
+      padding-left: 3rem;
+    }
+
+    .flex-outer > li > label, .flex-outer li p {
+      flex: 1 0 120px;
+          text-align: left;
+    }
+
+}
+
+/* MOBILE VIEWS*/
+@media screen and (max-width: 480px) {
+
+  body {
+      background-color: #37B2A5;
+      font-family: 'Lato', sans-serif;
+      margin-top: 0vh !important;
+  }
+
+    .row {
+       display: flex;
+       flex-direction: column;
+       border-bottom: solid 1px grey;
+    }
+
+    .col {
+    	flex: 1;
+    	padding: 0;
+    }
+
+    .set-btns-vert {
+      margin-top: 2%;
+      margin-bottom: 6%;
+    }
+
+    .survey-container {
+        max-width: 100%;
+        min-height: 35%;
+        background-color: #fff;
+        border-radius: .5rem;
+        padding-right: 2rem;
+        padding-left: 2rem;
+    }
+
+    canvas#surveyChart {
+        min-height: 50vh;
+        min-width: 100%;
+    }
+
+    .new-survey-container {
+        width: 100%;
+        min-height: 35%;
+        background-color: #fff;
+        border-radius: .5rem;
+        padding-right: 3rem;
+        padding-left: 1rem;
+    }
+
+    .srvyfrm-return-btn {
+        position: absolute;
+        left: 10%;
+    }
+
+    h1.header-item {
+        font-size: 1.2rem !important;
+        margin-left: 0rem;
+    }
+
+    .header-item {
+        flex: 1;
+        padding: .6em;
+        margin-right: 1rem;
+    }
+
 }

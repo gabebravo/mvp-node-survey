@@ -67,7 +67,7 @@ var render = {
 	},
 
 	dashboardView: function(admin, name, events) {
-		admin = false;
+		admin = true;
 
 		var eventsElement = '';
 		eventsElement += '<div class="header"><h1 class="header-item">Welcome back ' + name + '!</h1>';

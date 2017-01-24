@@ -9,17 +9,18 @@ chai.use(chaiHttp);
 describe('Survey api', function() {
 
   // check for server starting
-    it('should get 200 on root', function(done) {
+    it('should get 200 on root', function() {
         chai.request(app)
             .get('/')
             .end(function(err, res) {
-                should.equal(err, null);
                 res.should.have.status(200);
+                res.should.be.json;
+                res.should.be.a('object');
                 done();
             });
     });
 
-    // check for post route
+    // check post route for new user
     it('should add a user on POST', function() {
       const newUser = {
          'name': 'Abraham Lincoln',
@@ -30,21 +31,49 @@ describe('Survey api', function() {
           .post('/user')
           .send(newUser)
           .end(function(err, res) {
-             should.equal(err, null);
-             res.should.have.status(200);
-             res.should.be.json;
-             res.body.should.be.a('object');
-             res.body.should.have.property('name');
-             res.body.should.have.property('email');
-             res.body.should.have.property('password');
-             res.body.name.should.be.a('string');
-             res.body.email.should.be.a('string');
-             res.body.password.should.be.a('string');
-             res.body.name.should.equal('Abraham Lincoln');
-             res.body.email.should.equal('AL123@gmail.com');
-             res.body.password.should.equal('honestabe');
-            done();
+              if(err){
+                    should.equal(err, null);
+                    console.log("error");
+                    done(err);
+                }
+                else {
+                    res.should.have.status(200);
+                    res.should.be.json;
+                    res.body.should.be.a('object');
+                    res.body.should.include.keys('name', 'email', 'password');
+                    res.body.title.should.equal(newUser.name);
+                    res.body.content.should.equal(newUser.email);
+                    res.body.author.should.equal(newUser.password);
+                    done();
+                }
           });
       });
+
+      // check post route for login
+        it('should confirm login', function() {
+            const userAuth = {
+               'email': 'AL123@gmail.com',
+               'password': 'honestabe'
+            }
+            chai.request(app)
+                .post('/authenticate')
+                .send(userAuth)
+                .end(function(err, res) {
+                    if(err){
+                        should.equal(err, null);
+                        console.log("error");
+                        done(err);
+                    }
+                    else {
+                        res.should.have.status(200);
+                        res.should.be.json;
+                        res.body.should.be.a('object');
+                        res.body.should.include.keys('email', 'password');
+                        res.body.title.should.equal(userAuth.name);
+                        res.body.content.should.equal(userAuth.email);
+                        done();
+                    }
+                });
+        });
 
 });

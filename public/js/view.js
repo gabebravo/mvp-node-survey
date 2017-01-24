@@ -10,22 +10,20 @@ var render = {
         <h3>Login to view and take surveys</h3>
         <span>
             <div class="login-form">
-                <input type="text" class="login-email" placeholder="email">
-                    <input type="text" class="login-password" placeholder="password">
-                        <button class="login-btn" id="login">Login</button>
-                    </div>
-                    <div class="login-links">
-                        <p class="register-link">
-                            <span>Register Now</span>
-                        </p>
-                        <p class="password-link">
-                            <span>Forgot Password</span>
-                        </p>
-                    </div>
-                </span>
-            </span>
-        </div>
-    </div>
+                <input type="text" id="email" placeholder="email">
+                <input type="text" id="password" placeholder="password">
+                <button class="login-btn" id="login">Login</button>
+            </div>
+            <div class="login-links">
+                <p class="register-link">
+                    <span>Register Now</span>
+                </p>
+                <p class="password-link">
+                    <span>Forgot Password</span>
+                </p>
+            </div>
+        </span></span>
+      </div></div>
 
 			`);
 		$('.login').html($loginEl);
@@ -38,7 +36,8 @@ var render = {
 
 		$('#login').on('click', function(e) {
 			e.preventDefault();
-			  app.loginRedirect();
+			let elm = $(e.target).closest('div');
+			  app.loginRedirect(elm);
 		});
 	},
 

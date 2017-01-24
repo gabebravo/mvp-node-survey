@@ -1,7 +1,8 @@
 var app = ( function () {
 
-	// const TOKEN;
-	const REGISTER_URL = "/user";
+	const TOKEN = '';
+	const BASE_URL = "/user";
+	const AUTH_URL = "/authenticate";
 	// const DASHBOARD_URL = '/dashboard';
 	// const SURVEY_URL = '/survey';
 
@@ -9,26 +10,44 @@ var app = ( function () {
 		render.loginView();
 	}
 
-	function publicLoginUser() {
-		// $.getJSON(LOGIN_URL, function(data) {
-		// 	setUserToken(data.userLogin.token);
-    // 	privateGetEvents(data);
-  	// });
-		let userData = model.userLogin;
-		privateGetEvents(userData);
+	function publicLoginUser( elem ) {
+		let loginObj = {};
+		let inputArr = $(elem).find('input');
+		//let email = $(loginDiv).find('#email').val();
+		$.map(inputArr, (elm) => {
+			loginObj[$(elm).attr('id')] = $(elm).val();
+		});
+
+		let username = "";
+		let userType = "";
+
+		$.ajax ({
+				url: BASE_URL + AUTH_URL,
+				type: "POST",
+				data: JSON.stringify(loginObj),
+				dataType: "json",
+				contentType: "application/json; charset=utf-8",
+				success: function( data ){
+						username = data.name;
+						userType = data.admin;
+						TOKEN = data.token;
+						privateGetEvents(username, userType);
+				},
+				error: function () {
+						console.log("failed");
+				}
+		});
 	}
 
-	function privateGetEvents(loginObj) {
-		let username = loginObj.name;
-		let userType = loginObj.admin;
-		let eventsData = model.dashboardData;
+	function privateGetEvents(user, type) {
+
 		// $.getJSON(DASHBOARD_URL, function(data) {
 		// 	$('.login').empty();
 		// 	render.printDash(loginObj.name, loginObj.admin, data);
 		// 	window.location.hash = 'dashboard';
   	// });
 		$('.login').empty();
-		render.dashboardView(userType, username, eventsData);
+		render.dashboardView(type, user, eventsData);
 		window.location.hash = 'dashboard';
   }
 
@@ -60,7 +79,7 @@ var app = ( function () {
 			}
 
 			$.ajax ({
-			    url: REGISTER_URL,
+			    url: BASE_URL,
 			    type: "POST",
 			    data: JSON.stringify(reqObj),
 			    dataType: "json",

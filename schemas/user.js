@@ -25,15 +25,13 @@ const userSchema = new mongoose.Schema({
   password_reset: {
     type  : String,
     required: false,
-    default: uuid.v4,
     unique: true
+    // default: uuid.v4()
   },
 
   admin: {
     type  : Boolean,
-    default: false,
-    required: true,
-    unique: false
+    default: false
   }
 
 });

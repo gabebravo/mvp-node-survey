@@ -49,10 +49,10 @@ var render = {
 				<h1>Register Now</h1>
 				<span><h3>Enter account information below</h3><span>
 					<div class="register-form">
-						<input type="text" class="register-firstName" placeholder="First Name">
-						<input type="text" class="register-lastName" placeholder="Last Name">
-						<input type="text" class="register-email" placeholder="email">
-						<input type="text" class="register-password" placeholder="password">
+						<input type="text" id="firstName" placeholder="First Name">
+						<input type="text" id="lastName" placeholder="Last Name">
+						<input type="text" id="email" placeholder="email">
+						<input type="text" id="password" placeholder="password">
 						<button class="register-btn" id="save">Save</button>
 					</div>
 			 </div>
@@ -62,7 +62,8 @@ var render = {
 
 		$('#save').on('click', function(e) {
 			e.preventDefault();
-				app.registerUser();
+			let elm = e.target.closest('div');
+				app.registerUser(elm);
 		});
 	},
 

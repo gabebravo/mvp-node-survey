@@ -4,8 +4,8 @@ const router  =  new express.Router();
 const db   = require('../lib/db');
 const User = db.mongoose.model('User');
 
-const jwt = require('jsonwebtoken');
-const SECRET = process.env.JWT_SECRET;
+// const jwt = require('jsonwebtoken');
+// const SECRET = process.env.JWT_SECRET;
 
 function getUsers(req, res) {
   User.find((err, users) => {
@@ -17,8 +17,19 @@ function getUsers(req, res) {
       res.sendStatus(404);
     }
 
-    res.json(users);
+    res.status(200).json(users);
   });
+}
+
+createUser = (req, res) => {
+  const user = new User(req.body);
+
+  user.save()
+    .then((user) => {
+      res.status(201).json(user);
+    }).catch(err => {
+        res.status(500).send(err);
+    });
 }
 
 // function userLogin(req, res) {
@@ -69,18 +80,6 @@ function getUsers(req, res) {
 //     }
 //
 //     res.json(user);
-//   });
-// }
-//
-// function createUser(req, res) {
-//   const user = new User(req.body);
-//
-//   user.save((err, u) => {
-//     if (err) {
-//       res.status(500).send(err)
-//     }
-//
-//     res.send(u);
 //   });
 // }
 //
@@ -149,15 +148,41 @@ function getUsers(req, res) {
 // requireAuthenticationOnRoutes();
 router.get('/',    getUsers);
 // router.get('/:id', getUserById);
-// router.post('/',   createUser);
+router.post('/',   createUser);
 // router.delete('/:id', deleteUser);
 // router.put('/:id', updateUser);
 
-// {
-//     "name": "John Doe",
-//     "email": "JD123@gmail.com",
-//     "password": "ilovecats",
-//     "admin": false
-//   }
-
 module.exports = router;
+
+// db.users.insertOne({
+//   "name": "Gabe Bravo",
+//   "email": "GB123@gmail.com",
+//   "password": "ilovecats",
+//   "admin": true
+// });
+
+// {
+// 	  "name": "Melvin Martian",
+//     "email": "MM123@gmail.com",
+//     "password": "looneytunes"
+// }
+// {
+//   "name": "Johnny Blaze",
+//   "email": "JB123@gmail.com",
+//   "password": "methodman",
+// }
+// {
+//   "name": "Tony Starks",
+//   "email": "TS123@gmail.com",
+//   "password": "ghostfacekilla",
+// }
+// {
+//   "name": "Elves Presley",
+//   "email": "EP123@gmail.com",
+//   "password": "hounddog"
+// }
+// {
+//   "name": "Melvin Martian",
+//   "email": "MM123@gmail.com",
+//   "password": "looneytunes"
+// }

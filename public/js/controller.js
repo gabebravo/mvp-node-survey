@@ -1,7 +1,7 @@
 var app = ( function () {
 
 	// const TOKEN;
-	// const LOGIN_URL = '/authenticate';
+	const REGISTER_URL = "/user";
 	// const DASHBOARD_URL = '/dashboard';
 	// const SURVEY_URL = '/survey';
 
@@ -44,18 +44,35 @@ var app = ( function () {
 	// 	return TOKEN;
 	// }
 
-	function publicRegisterNewUser() {
-		// make an ajax call on submit
-		// based on the register being a succes
-		// redirect the user to the login page
-		var success = true;
-		if (success) { // mongo added user
-			$('.register').empty();
-			render.loginView();
-			window.location.hash = '';
-		} else {
-			// modal displaying user input error
-		}
+	function publicRegisterNewUser( elem ) {
+			let reqObj = {};
+			let name = "";
+			let input = $(elem).find('input');
+
+			for ( field of input ) {
+					if($(field).attr('id') == "firstName" || $(field).attr('id') == "lastName"){
+						 name += $(field).val() + " ";
+					}
+					reqObj["name"] = name.trim();
+					if($(field).attr('id') == "password" || $(field).attr('id') == "email"){
+						 reqObj[$(field).attr('id')] = $(field).val();
+					}
+			}
+
+			$.ajax ({
+			    url: REGISTER_URL,
+			    type: "POST",
+			    data: JSON.stringify(reqObj),
+			    dataType: "json",
+			    contentType: "application/json; charset=utf-8",
+			    success: function(){
+			        console.log("passed");
+							render.loginView();
+			    },
+					error: function () {
+							console.log("failed");
+					}
+			});
 	}
 
 	function publicBuildChart(ctxObj, data ) {

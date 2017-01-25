@@ -76,4 +76,42 @@ describe('Survey api', function() {
                 });
         });
 
+        // check for surveys in the DB
+          it('should get 200 for surveys', function() {
+              chai.request(app)
+                  .get('/survey')
+                  .end(function(err, res) {
+                      if(err){
+                          should.equal(err, null);
+                          console.log("error");
+                          done(err);
+                      }
+                      else {
+                          res.should.have.status(200);
+                          res.should.be.json;
+                          res.body.should.be.a('object');
+                          done();
+                      }
+                  });
+          });
+
+          // check for surveys in the DB
+            it('should get 200 on a survey', function() {
+                chai.request(app)
+                    .get('/survey/:id')
+                    .end(function(err, res) {
+                        if(err){
+                            should.equal(err, null);
+                            console.log("error");
+                            done(err);
+                        }
+                        else {
+                            res.should.have.status(200);
+                            res.should.be.json;
+                            res.body.should.be.a('object');
+                            done();
+                        }
+                    });
+            });
+
 });

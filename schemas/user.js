@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-const uuid = require('uuid');
 const bcrypt = require('bcrypt');
 SALT_WORK_FACTOR = 10;
 
@@ -24,8 +23,7 @@ const userSchema = new mongoose.Schema({
 
   password_reset: {
     type  : String,
-    required: false,
-    unique: true
+    required: false
     // default: uuid.v4()
   },
 

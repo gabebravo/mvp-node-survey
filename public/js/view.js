@@ -67,10 +67,8 @@ var render = {
 	},
 
 	dashboardView: function(admin, name, events) {
-		admin = true;
-
 		var eventsElement = '';
-		eventsElement += '<div class="header"><h1 class="header-item">Welcome back ' + name + '!</h1>';
+		eventsElement += '<div class="header"><h1 class="header-item">' + name + '</h1>';
 		if (admin) {
 			eventsElement += '<div class="create-survey"><h3 class="header-item">Create Survey</h3></div>';
 		}
@@ -80,7 +78,7 @@ var render = {
 			events.forEach( function(value) {
 				var active = app.isSurveyActive(value.expiration);
 				var areUsers = app.isSurveyEmpty(value.users);
-				eventsElement += '<div class="row" eventId='+ value.id +'>';
+				eventsElement += '<div class="row" eventId='+ value['_id'] +'>';
 				eventsElement += '<div class="col"><h3>' + value.name + '</h3></div>';
 				eventsElement += '<div class="col"><p>' + value.description + '</p></div>';
 				eventsElement += '<div class="col"><p>';
@@ -121,11 +119,13 @@ var render = {
 		});
 		$('.view-survey').on('click', function(e) {
 			e.preventDefault();
-		  app.showSurvey(e.target, false);
+			let elm = e.target.closest('.row');
+		  app.showSurvey(elm, false);
 		});
 		$('.survey-vote').on('click', function(e) {
 			e.preventDefault();
-		  app.showSurvey(e.target, true);
+			let elm = e.target.closest('.row');
+		  app.showSurvey(elm, true);
 		});
 		$('.logout-link').on('click', function(e) {
 			e.preventDefault();

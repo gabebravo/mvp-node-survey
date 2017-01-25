@@ -1,9 +1,9 @@
 var app = ( function () {
 
-	const TOKEN = '';
-	const BASE_URL = "/user";
+	let TOKEN = '';
+	const BASE_USER = "/user";
 	const AUTH_URL = "/authenticate";
-	// const DASHBOARD_URL = '/dashboard';
+	const BASE_SURVEY = '/survey';
 	// const SURVEY_URL = '/survey';
 
   function publicStartApp() {
@@ -11,18 +11,23 @@ var app = ( function () {
 	}
 
 	function publicLoginUser( elem ) {
-		let loginObj = {};
-		let inputArr = $(elem).find('input');
-		//let email = $(loginDiv).find('#email').val();
-		$.map(inputArr, (elm) => {
-			loginObj[$(elm).attr('id')] = $(elm).val();
-		});
-
+		// let loginObj = {};
+		// let inputArr = $(elem).find('input');
+		//
+		// $.map(inputArr, (elm) => {
+		// 	loginObj[$(elm).attr('id')] = $(elm).val();
+		// });
+		//
 		let username = "";
 		let userType = "";
 
+		let loginObj = {
+			email: "MD123@gmail.com",
+			password: "kindofblue"
+		};
+
 		$.ajax ({
-				url: BASE_URL + AUTH_URL,
+				url: BASE_USER + AUTH_URL,
 				type: "POST",
 				data: JSON.stringify(loginObj),
 				dataType: "json",
@@ -40,15 +45,21 @@ var app = ( function () {
 	}
 
 	function privateGetEvents(user, type) {
-
-		// $.getJSON(DASHBOARD_URL, function(data) {
-		// 	$('.login').empty();
-		// 	render.printDash(loginObj.name, loginObj.admin, data);
-		// 	window.location.hash = 'dashboard';
-  	// });
-		$('.login').empty();
-		render.dashboardView(type, user, eventsData);
-		window.location.hash = 'dashboard';
+		$.ajax ({
+				url: BASE_SURVEY,
+				type: "GET",
+				headers: {"x-access-token": TOKEN},
+				dataType: "json",
+				contentType: "application/json; charset=utf-8",
+				success: function( data ){
+					$('.login').empty();
+					render.dashboardView(type, user, data);
+					window.location.hash = 'dashboard';
+				},
+				error: function () {
+						console.log("failed");
+				}
+		});
   }
 
   function publicRegisterUser() {
@@ -79,7 +90,7 @@ var app = ( function () {
 			}
 
 			$.ajax ({
-			    url: BASE_URL,
+			    url: BASE_USER,
 			    type: "POST",
 			    data: JSON.stringify(reqObj),
 			    dataType: "json",
@@ -143,35 +154,40 @@ var app = ( function () {
  }
 
  function publicGetSurvey( elem, bool ) {
-	 var surveyId = $(elem).closest('.row').attr('eventid');
+	 let surveyId = $(elem).closest('.row').attr('eventid');
+	 let voteFlag = bool;
 
-	 model.dashboardData.forEach( function(obj, index ) {
-		 if( surveyId === obj.id ) {
-			$('.dashboard').empty();
-	 		render.surveyView(model.dashboardData[index], bool);
-	 		window.location.hash = 'survey';
-		 }
+	 $.ajax ({
+			 url: BASE_SURVEY + "/" + surveyId,
+			 type: "GET",
+			 headers: {"x-access-token": TOKEN},
+			 dataType: "json",
+			 contentType: "application/json; charset=utf-8",
+			 success: function( data ) {
+			 		$('.dashboard').empty();
+			 		render.surveyView(data, voteFlag);
+					window.location.hash = 'survey';
+			 },
+			 error: function () {
+					 console.log("failed");
+			 }
 	 });
-
-	//  $.getJSON(SURVEY_URL, function(data) {
-	//  	$('.dashboard').empty();
-	// 	render.sureyView(data);
-	//  	window.location.hash = 'survey';
-	//  });
  }
 
  function publicLogoutUser() {
 		$('.dashboard').empty();
 		render.loginView();
-		window.location.hash = '/';
+		window.location.hash = '';
  }
 
  function publicCheckSurveyExpiration( surveyExpDate ) {
+	 let timeAsMs = Date.parse(surveyExpDate);
 	 // for test purposes: console.log(Date.UTC(2017, 07, 14));
 	 var todaysDate = new Date();
-	 if ( surveyExpDate > todaysDate.getTime() ) {
+	 if ( timeAsMs > todaysDate.getTime() ) {
 		 return true;
-	 } else return false;
+	 } else
+	 		return false;
  }
 
  function publicCheckSurveyHasUsers( surveyUserCount ) {

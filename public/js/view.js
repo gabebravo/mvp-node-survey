@@ -85,9 +85,9 @@ var render = {
 
 					value.stats.forEach( function( obj, index, arr) {
 						if ( index < arr.length - 1 ) {
-							eventsElement += obj.answerItem + ' : ' + obj.count + ' / ';
+							eventsElement += Object.keys(obj) + ' : ' + Object.values(obj) + ' / ';
 						} else
-							eventsElement += obj.answerItem + ' : ' + obj.count;
+							eventsElement += Object.keys(obj) + ' : ' + Object.values(obj);
 					});
 
 				eventsElement += '</p></div>';
@@ -99,7 +99,7 @@ var render = {
 							eventsElement += '<button class="delete-survey">DELETE SURVEY</button>';
 						}
 				} else {
-					if (active) {
+					if (active && app.userHasntVoted(value.users)) {
 						eventsElement += '<button class="survey-vote">VOTE NOW</button>';
 					}
 				}
@@ -137,13 +137,13 @@ var render = {
 		var surveyEl = '';
 		if (canVote) {
 			surveyEl +='<div class = "survey-text">';
-			surveyEl +=	'<div class="survey-container">';
+			surveyEl +=	'<div class="survey-container" survey-id='+ surveyObj["_id"] +'>';
 		  surveyEl +=	'<h1>' + surveyObj.name + '</h1>';
 		  surveyEl +=	'<h1>' + surveyObj.description + '</h1>';
 		  surveyEl +=	'<canvas id="surveyChart"></canvas>';
 			surveyEl +=	'<div class="survey-btns">';
 					surveyObj["stats"].forEach( function(obj) {
-						surveyEl +=	'<button class="survey-vote" survey-btn="' + obj["answerItem"] + '">'+ obj["answerItem"] +'</button>';
+						surveyEl +=	'<button class="survey-vote" survey-btn="' + Object.keys(obj) + '">'+ Object.keys(obj) +'</button>';
 					});
 	    surveyEl += '</div></div></div>';
 		} else {
@@ -161,13 +161,15 @@ var render = {
 		$('.return-dash').on( 'click', function(e) {
 			e.preventDefault();
 			$('.survey').empty();
-			app.loginRedirect();
+			app.loginRedirect(true);
 			window.location.hash = '';
 		});
 		$('.survey-vote').on( 'click', function(e) {
 			e.preventDefault();
+			let survId = $(e.target).closest(".survey-container").attr("survey-id");
+			let survBtn = $(e.target).attr("survey-btn");
 			$('.survey').empty();
-			app.loginRedirect();
+			app.castVote(survId, survBtn);
 			window.location.hash = '';
 		});
 
@@ -175,7 +177,7 @@ var render = {
 
 		var surveyData = {};
 		surveyObj.stats.forEach( function( obj ) {
-			chartMap.set(obj.answerItem, Number(obj.count));
+			chartMap.set(Object.keys(obj), Number(Object.values(obj)));
 		});
 
 		var ctx = $("#surveyChart");

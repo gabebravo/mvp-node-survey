@@ -55,6 +55,7 @@ function userLogin(req, res) {
           res.status(200).json({
             name: user.name,
             admin: user.admin,
+            email: user.email,
             success: true,
             message: 'Sucessfully logged in!',
             token: token

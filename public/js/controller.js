@@ -1,6 +1,10 @@
 var app = ( function () {
 
 	let TOKEN = '';
+	let USER_ID = '';
+	let USER_TYPE = '';
+	let USER_NAME = '';
+
 	const BASE_USER = "/user";
 	const AUTH_URL = "/authenticate";
 	const BASE_SURVEY = '/survey';
@@ -11,20 +15,18 @@ var app = ( function () {
 	}
 
 	function publicLoginUser( elem ) {
-		// let loginObj = {};
-		// let inputArr = $(elem).find('input');
-		//
-		// $.map(inputArr, (elm) => {
-		// 	loginObj[$(elm).attr('id')] = $(elm).val();
-		// });
-		//
-		let username = "";
-		let userType = "";
+		let flag = typeof elem;
 
-		let loginObj = {
-			email: "MD123@gmail.com",
-			password: "kindofblue"
-		};
+		if ( flag ){
+			privateGetEvents(USER_NAME, USER_TYPE);
+		}
+
+		let loginObj = {};
+		let inputArr = $(elem).find('input');
+
+		$.map(inputArr, (elm) => {
+			loginObj[$(elm).attr('id')] = $(elm).val();
+		});
 
 		$.ajax ({
 				url: BASE_USER + AUTH_URL,
@@ -33,10 +35,11 @@ var app = ( function () {
 				dataType: "json",
 				contentType: "application/json; charset=utf-8",
 				success: function( data ){
-						username = data.name;
-						userType = data.admin;
+						USER_NAME = data.name;
+						USER_TYPE = data.admin;
+						USER_ID = data.email;
 						TOKEN = data.token;
-						privateGetEvents(username, userType);
+						privateGetEvents(USER_NAME, USER_TYPE);
 				},
 				error: function () {
 						console.log("failed");
@@ -53,6 +56,7 @@ var app = ( function () {
 				contentType: "application/json; charset=utf-8",
 				success: function( data ){
 					$('.login').empty();
+					console.log(data);
 					render.dashboardView(type, user, data);
 					window.location.hash = 'dashboard';
 				},
@@ -69,9 +73,6 @@ var app = ( function () {
 
 	// function setUserToken(token) {
 	// 	TOKEN = token;
-	// }
-	// function getUserToken(token) {
-	// 	return TOKEN;
 	// }
 
 	function publicRegisterNewUser( elem ) {
@@ -197,11 +198,54 @@ var app = ( function () {
 	 	return true;
  }
 
-	publicCheckSurveyHasUsers = ( surveyUserCount ) => {
-	 if(surveyUserCount.length > 0)
-	 	return true;
-	 else
-	 	return false;
+ function publicCheckIfUserVoted( usrs ) {
+	 let result = false;
+	 usrs.forEach( function( obj ) {
+		 if ( obj.id !== USER_ID )
+			 result = true;
+	 });
+	 return result;
+ }
+
+ function publicUserVoteCheck( surveyId, voteOption ) {
+	 let survId = surveyId;
+	 let survOpt = voteOption;
+	 let reqUsr = { "id": USER_ID }
+	 let reqOpt = { "topic": survOpt }
+
+	 $.ajax ({
+ 			url: BASE_SURVEY + "/vote/" + survId,
+ 			type: "POST",
+			data: JSON.stringify(reqUsr),
+ 			headers: {"x-access-token": TOKEN},
+ 			dataType: "json",
+ 			contentType: "application/json; charset=utf-8",
+ 			success: function() {
+ 				 privateAddVote(survId, reqOpt);
+ 			},
+ 			error: function () {
+ 					console.log("failed");
+ 			}
+ 		});
+ }
+
+ function privateAddVote(path, vote) {
+	 $.ajax ({
+			 url: BASE_SURVEY + "/increment/" + path,
+			 type: "POST",
+			 data: JSON.stringify(vote),
+			 headers: {"x-access-token": TOKEN},
+			 dataType: "json",
+			 contentType: "application/json; charset=utf-8",
+			 success: function( data ){
+				 $('.survey').empty();
+				 privateGetEvents(USER_NAME, USER_TYPE);
+				 window.location.hash = 'dashboard';
+			 },
+			 error: function () {
+					 console.log("failed");
+			 }
+	 });
  }
 
  function publicCreateSurvey() {
@@ -221,6 +265,7 @@ var app = ( function () {
 		// fetchToken: getUserToken,
 				startApp: publicStartApp,
 				loginRedirect: publicLoginUser,
+				userHasntVoted: publicCheckIfUserVoted,
 				registerRedirect: publicRegisterUser,
 				registerUser: publicRegisterNewUser,
 				buildChart: publicBuildChart,
@@ -228,6 +273,7 @@ var app = ( function () {
 				logout:	publicLogoutUser,
 				isSurveyActive: publicCheckSurveyExpiration,
 				isSurveyEmpty: publicCheckSurveyHasUsers,
+				castVote: publicUserVoteCheck,
 				deleteSurvey: publicRemoveSurvey,
 				createSurvey: publicCreateSurvey
 		};

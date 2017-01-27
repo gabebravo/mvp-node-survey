@@ -27,4 +27,13 @@ const surveySchema = new mongoose.Schema({
 
 module.exports = surveySchema;
 
-// db.events.insert({ "name": "Cats or Dogs", "topic": "Do you like Cats better than Dogs", "users": [{"id":"5869f89eaa07c6756ab2d23f"}],"count": {"yes": 1, "no": 0}, "expiration": 1352540684243})
+// surveyObj = {
+//  name : "Favorite Icecream",
+//     "description" : "What is your favorite iceream?",
+//     "stats" : {
+// 		 "Chocolate": 0,
+//       "Vanilla": 0,
+//       "Strawberry": 0
+// 	 },
+//     "expiration" : "1502668800000"
+// };

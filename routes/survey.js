@@ -41,25 +41,21 @@ function addUserToVoteArray(req, res) {
   .findOne({ _id: req.params.id }, 'users stats')
   .exec()
   .then(survey => {
-      survey.stats.forEach(function( val ){
+      survey.users.forEach(function( val ){
         if(val.id == req.body.id){
           res.status(200).json({message: 'Sorry you already voted'});
         }
       });
     survey.users.push({id: req.body.id});
-        survey.save(err => { // save the new info
-          if(err){
-            res.send(err);
-          }
-          res.status(200).json({
-            message: 'Your vote was added',
-            survey: survey
-          });
+      survey.save(err => { // save the new info
+        if(err){
+          res.send(err);
+        }
+        res.status(200).json({
+          message: 'Your vote was added',
+          survey: survey
         });
-    res.status(200).json({
-      message: 'Your vote was added',
-      survey: survey
-    });
+      });
   })
   .catch(
     err => {

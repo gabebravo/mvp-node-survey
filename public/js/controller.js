@@ -17,37 +17,42 @@ var app = ( function () {
 	function publicLoginUser( elem ) {
 		let flag = typeof elem;
 
-		if ( flag ){
+		if ( flag === "boolean" ){
+
 			privateGetEvents(USER_NAME, USER_TYPE);
+
+		} else {
+
+			let loginObj = {};
+			let inputArr = $(elem).find('input');
+
+			$.map(inputArr, (elm) => {
+				loginObj[$(elm).attr('id')] = $(elm).val();
+			});
+
+			$.ajax ({
+					url: BASE_USER + AUTH_URL,
+					type: "POST",
+					data: JSON.stringify(loginObj),
+					dataType: "json",
+					contentType: "application/json; charset=utf-8",
+					success: function( data ){
+							USER_NAME = data.name;
+							USER_TYPE = data.admin;
+							USER_ID = data.email;
+							TOKEN = data.token;
+							privateGetEvents(USER_NAME, USER_TYPE);
+					},
+					error: function () {
+							console.log("failed");
+					}
+			});
+
 		}
-
-		let loginObj = {};
-		let inputArr = $(elem).find('input');
-
-		$.map(inputArr, (elm) => {
-			loginObj[$(elm).attr('id')] = $(elm).val();
-		});
-
-		$.ajax ({
-				url: BASE_USER + AUTH_URL,
-				type: "POST",
-				data: JSON.stringify(loginObj),
-				dataType: "json",
-				contentType: "application/json; charset=utf-8",
-				success: function( data ){
-						USER_NAME = data.name;
-						USER_TYPE = data.admin;
-						USER_ID = data.email;
-						TOKEN = data.token;
-						privateGetEvents(USER_NAME, USER_TYPE);
-				},
-				error: function () {
-						console.log("failed");
-				}
-		});
 	}
 
 	function privateGetEvents(user, type) {
+		console.log("this gets called");
 		$.ajax ({
 				url: BASE_SURVEY,
 				type: "GET",
@@ -165,8 +170,8 @@ var app = ( function () {
 			 dataType: "json",
 			 contentType: "application/json; charset=utf-8",
 			 success: function( data ) {
-			 		$('.dashboard').empty();
-			 		render.surveyView(data, voteFlag);
+					$('.dashboard').empty();
+					render.surveyView(data, voteFlag);
 					window.location.hash = 'survey';
 			 },
 			 error: function () {
@@ -212,21 +217,25 @@ var app = ( function () {
 	 return noMatch;
  }
 
- function publicUserVoteCheck( ) {
-	 let survId = surveyId;
-	 let survOpt = voteOption;
-	 let reqUsr = { "id": USER_ID }
-	 let reqOpt = { "topic": survOpt }
+ function publicUserVoteCheck( surveyId, voteOption ) {
+  let survId = surveyId;
+  let survOpt = voteOption;
+  let reqUsr = { "id": USER_ID }
+  // let reqOpt = { "topic": survOpt }
 
-	 $.ajax ({
+  $.ajax ({
  			url: BASE_SURVEY + "/vote/" + survId,
  			type: "POST",
-			data: JSON.stringify(reqUsr),
+ 		data: JSON.stringify(reqUsr),
  			headers: {"x-access-token": TOKEN},
  			dataType: "json",
  			contentType: "application/json; charset=utf-8",
- 			success: function() {
- 				 privateAddVote(survId, reqOpt);
+ 			success: function( data ) {
+ 			console.log('user sucessfully added');
+ 		// 	$('.survey').empty();
+ 		// 	privateGetEvents(USER_NAME, USER_TYPE);
+ 		// 	window.location.hash = 'dashboard';
+ 				// privateAddVote(survId, reqOpt);
  			},
  			error: function () {
  					console.log("failed");
@@ -234,23 +243,28 @@ var app = ( function () {
  		});
  }
 
- function privateAddVote(path, vote) {
-	 $.ajax ({
-			 url: BASE_SURVEY + "/increment/" + path,
-			 type: "POST",
-			 data: JSON.stringify(vote),
-			 headers: {"x-access-token": TOKEN},
-			 dataType: "json",
-			 contentType: "application/json; charset=utf-8",
-			 success: function( data ){
+ function publicIncrementVote( surveyId, voteOption ) {
+	 let survId = surveyId;
+	 let survOpt = voteOption;
+	//  let reqUsr = { "id": USER_ID }
+	 let reqOpt = { "topic": survOpt }
+
+	  $.ajax ({
+	 		 url: BASE_SURVEY + "/increment/" + surveyId,
+	 		 type: "POST",
+	 		 data: JSON.stringify(reqOpt),
+	 		 headers: {"x-access-token": TOKEN},
+	 		 dataType: "json",
+	 		 contentType: "application/json; charset=utf-8",
+	 		 success: function( data ){
 				 $('.survey').empty();
-				 privateGetEvents(USER_NAME, USER_TYPE);
-				 window.location.hash = 'dashboard';
-			 },
-			 error: function () {
-					 console.log("failed");
-			 }
-	 });
+ 				privateGetEvents(USER_NAME, USER_TYPE);
+ 				window.location.hash = 'dashboard';
+	 		 },
+	 		 error: function () {
+	 				 console.log("failed");
+	 		 }
+	  });
  }
 
  function publicCreateSurvey( elem ) {
@@ -275,17 +289,6 @@ var app = ( function () {
 			 }
 		 }
  	 });
-
- // surveyObj = {
- //  name : "Favorite Icecream",
- //     "description" : "What is your favorite iceream?",
- //     "stats" : {
- // 		 "Chocolate": 0,
- //       "Vanilla": 0,
- //       "Strawberry": 0
- // 	 },
- //     "expiration" : "1502668800000"
- // };
 
 	 let path = '/create';
 	 privateAddSurvey(path, surveyObj);
@@ -332,6 +335,7 @@ var app = ( function () {
 				isSurveyActive: publicCheckSurveyExpiration,
 				isSurveyEmpty: publicCheckSurveyHasUsers,
 				castVote: publicUserVoteCheck,
+				incVote: publicIncrementVote,
 				deleteSurvey: publicRemoveSurvey,
 				createSurvey: publicCreateSurvey
 		};

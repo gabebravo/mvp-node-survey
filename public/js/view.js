@@ -120,7 +120,6 @@ var render = {
 		});
 		$('.survey-vote').on('click', function(e) {
 			e.preventDefault();
-			app.castVote();
 			let elm = e.target.closest('.row');
 		  app.showSurvey(elm, true);
 		});
@@ -138,9 +137,9 @@ var render = {
 		  surveyEl +=	'<h1>' + surveyObj.name + '</h1>';
 		  surveyEl +=	'<h1>' + surveyObj.description + '</h1>';
 		  surveyEl +=	'<canvas id="surveyChart"></canvas>';
-			surveyEl +=	'<div class="survey-btns">'; 
+			surveyEl +=	'<div class="survey-btns">';
 				for ( key in surveyObj.stats ) {
-					surveyEl +=	'<button class="survey-vote" survey-btn="' + key + '">' + surveyObj.stats[key] +'</button>';
+					surveyEl +=	'<button class="survey-vote" survey-btn="' + key + '">' + key +'</button>';
 				}
 	    surveyEl += '</div></div></div>';
 		} else {
@@ -167,6 +166,7 @@ var render = {
 			let survBtn = $(e.target).attr("survey-btn");
 			$('.survey').empty();
 			app.castVote(survId, survBtn);
+			app.incVote(survId, survBtn);
 			window.location.hash = '';
 		});
 

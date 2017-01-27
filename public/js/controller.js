@@ -200,11 +200,9 @@ var app = ( function () {
 	 let usrArr = surveyUsers;
 	 let areUsers = false;
 	 if(usrArr.length > 0) {
-		 return true;
+		 areUsers = true;
 	 }
-	 else {
-		 return true;
-	 }
+	 return areUsers;
  }
 
  function publicCheckIfUserVoted( usrs ) {

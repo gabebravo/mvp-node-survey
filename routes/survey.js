@@ -96,12 +96,24 @@ function incrementVote(req, res) {
 createSurvey = (req, res) => {
   const survey = new Survey(req.body);
   survey.save()
-    .then((survey) => {
+    .then(survey => {
       res.status(200).json({survey: survey});
       //res.status(200).json({message: 'Congrats survey added'});
     }).catch(err => {
         res.status(500).send({message: 'Internal server error'});
     });
+}
+
+deleteSurvey = (req, res) => {
+  Survey.remove({
+    _id: req.params.id
+  })
+  .exec()
+  .then( survey => {
+    res.status(200).json({message: "The survey was sucessfully delteted"});
+  }).catch( err => {
+    res.status(500).send(err);
+  });
 }
 
 function requireAuthenticationOnRoutes() {
@@ -142,7 +154,7 @@ router.get('/:id', getSurveyById);
 router.post('/vote/:id', addUserToVoteArray);
 router.post('/increment/:id', incrementVote);
 router.post('/create',   createSurvey);
-// router.delete('/:id', deleteSurvey);
+router.delete('/:id', deleteSurvey);
 
 module.exports = router;
 

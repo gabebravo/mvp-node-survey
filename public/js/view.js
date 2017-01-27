@@ -111,7 +111,8 @@ var render = {
 		});
 		$('.delete-survey').on('click', function(e) {
 			e.preventDefault();
-			app.deleteSurvey(e.target);
+			let elm = e.target.closest('.row');
+			app.deleteSurvey(elm);
 		});
 		$('.view-survey').on('click', function(e) {
 			e.preventDefault();

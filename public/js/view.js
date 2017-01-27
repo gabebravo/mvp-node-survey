@@ -27,7 +27,6 @@ var render = {
 
 			`);
 		$('.login').html($loginEl);
-		// register btn click
 		$('.register-link').on('click', function(e) {
 			  app.registerRedirect();
 		});
@@ -83,12 +82,9 @@ var render = {
 				eventsElement += '<div class="col"><p>' + value.description + '</p></div>';
 				eventsElement += '<div class="col"><p>';
 
-					value.stats.forEach( function( obj, index, arr) {
-						if ( index < arr.length - 1 ) {
-							eventsElement += Object.keys(obj) + ' : ' + Object.values(obj) + ' / ';
-						} else
-							eventsElement += Object.keys(obj) + ' : ' + Object.values(obj);
-					});
+					for ( key in value.stats ) {
+						eventsElement += key + ' : ' + value.stats[key] + " ";
+					}
 
 				eventsElement += '</p></div>';
 				eventsElement += '<div class="col">';
@@ -124,6 +120,7 @@ var render = {
 		});
 		$('.survey-vote').on('click', function(e) {
 			e.preventDefault();
+			app.castVote();
 			let elm = e.target.closest('.row');
 		  app.showSurvey(elm, true);
 		});
@@ -141,10 +138,10 @@ var render = {
 		  surveyEl +=	'<h1>' + surveyObj.name + '</h1>';
 		  surveyEl +=	'<h1>' + surveyObj.description + '</h1>';
 		  surveyEl +=	'<canvas id="surveyChart"></canvas>';
-			surveyEl +=	'<div class="survey-btns">';
-					surveyObj["stats"].forEach( function(obj) {
-						surveyEl +=	'<button class="survey-vote" survey-btn="' + Object.keys(obj) + '">'+ Object.keys(obj) +'</button>';
-					});
+			surveyEl +=	'<div class="survey-btns">'; 
+				for ( key in surveyObj.stats ) {
+					surveyEl +=	'<button class="survey-vote" survey-btn="' + key + '">' + surveyObj.stats[key] +'</button>';
+				}
 	    surveyEl += '</div></div></div>';
 		} else {
 			surveyEl += '<div class="survey-text">';
@@ -175,10 +172,9 @@ var render = {
 
 		let chartMap = new Map();
 
-		var surveyData = {};
-		surveyObj.stats.forEach( function( obj ) {
-			chartMap.set(Object.keys(obj), Number(Object.values(obj)));
-		});
+		for ( key in surveyObj.stats ) {
+			chartMap.set( key, Number(surveyObj.stats[key]) );
+		}
 
 		var ctx = $("#surveyChart");
 		app.buildChart(ctx, chartMap);
@@ -191,40 +187,40 @@ var render = {
 	  <form>
 	    <ul class="flex-outer">
 	      <li>
-	        <label for="name">Name</label>
-	        <input type="text" id="sForm-name" placeholder="Enter your first name here">
+	        <label for="name">Survey Name</label>
+	        <input type="text" id="name" placeholder="Enter the survey name">
 	      </li>
 	      <li>
 	        <label for="description">Description</label>
-	        <input type="text" id="sForm-description" placeholder="Enter your last name here">
+	        <input type="text" id="description" placeholder="Enter a short survey question">
 	      </li>
 	      <li>
 	        <label for="item1">Survey Item 1</label>
-	        <input type="text" id="sForm-item1" placeholder="Required">
+	        <input type="text" id="item" placeholder="Required">
 	      </li>
 				<li>
 	        <label for="item2">Survey Item 2</label>
-	        <input type="text" id="sForm-item2" placeholder="Required">
+	        <input type="text" id="item" placeholder="Required">
 	      </li>
 				<li>
 	        <label for="item3">Survey Item 2</label>
-	        <input type="text" id="sForm-item3" placeholder="Optional">
+	        <input type="text" id="item" placeholder="Optional">
 	      </li>
 				<li>
 	        <label for="item4">Survey Item 4</label>
-	        <input type="text" id="sForm-item4" placeholder="Optional">
+	        <input type="text" id="item" placeholder="Optional">
 	      </li>
 				<li>
 	        <label for="item5">Survey Item 5</label>
-	        <input type="text" id="sForm-item5" placeholder="Optional">
+	        <input type="text" id="item" placeholder="Optional">
 	      </li>
 	      <li>
 	        <label for="exp-date">Expiration Date</label>
-	        <input type="date" id="sForm-exp" placeholder="Format: dd-mm-yyyy">
+	        <input type="date" id="expiration" placeholder="Format: dd-mm-yyyy">
 	      </li>
 	      <li>
 			    <div class="srvyfrm-return-btn"><button type="submit">Return Home</button></div>
-	        <button class="srvyfrm-submit-btn" type="submit">Submit</button>
+	        <button id="submit" type="submit">Submit</button>
 	      </li>
 	    </ul>
 	  </form>
@@ -238,10 +234,11 @@ var render = {
 			app.loginRedirect();
 			window.location.hash = '';
 		});
-		$('.srvyfrm-submit-btn').on('click', function(e) {
+		$('#submit').on('click', function(e) {
 			e.preventDefault();
+			let elm = $(e.target).closest('ul');
 			$('.survey').empty();
-			app.loginRedirect();
+			app.createSurvey(elm);
 			window.location.hash = '';
 		});
 	}

@@ -1,9 +1,9 @@
 var app = ( function () {
 
-	let TOKEN = '';
-	let USER_ID = '';
-	let USER_TYPE = '';
-	let USER_NAME = '';
+	let TOKEN;
+	let USER_ID;
+	let USER_TYPE;
+	let USER_NAME;
 
 	const BASE_USER = "/user";
 	const AUTH_URL = "/authenticate";
@@ -56,7 +56,6 @@ var app = ( function () {
 				contentType: "application/json; charset=utf-8",
 				success: function( data ){
 					$('.login').empty();
-					console.log(data);
 					render.dashboardView(type, user, data);
 					window.location.hash = 'dashboard';
 				},
@@ -98,6 +97,7 @@ var app = ( function () {
 			    contentType: "application/json; charset=utf-8",
 			    success: function(){
 			        console.log("passed");
+							$('.register').empty();
 							render.loginView();
 			    },
 					error: function () {
@@ -191,23 +191,28 @@ var app = ( function () {
 	 		return false;
  }
 
- function publicCheckSurveyHasUsers( surveyUserCount ) {
-	 if(surveyUserCount.length > 0)
-	 	return false;
-	 else
-	 	return true;
+ function publicCheckSurveyHasUsers( surveyUsers ) {
+	 let usrArr = surveyUsers;
+	 let areUsers = false;
+	 if(usrArr.length > 0) {
+		 return true;
+	 }
+	 else {
+		 return true;
+	 }
  }
 
  function publicCheckIfUserVoted( usrs ) {
-	 let result = false;
+	 let noMatch = true;
 	 usrs.forEach( function( obj ) {
-		 if ( obj.id !== USER_ID )
-			 result = true;
+		 if ( obj.id === USER_ID ) {
+				 noMatch = false;
+		 }
 	 });
-	 return result;
+	 return noMatch;
  }
 
- function publicUserVoteCheck( surveyId, voteOption ) {
+ function publicUserVoteCheck( ) {
 	 let survId = surveyId;
 	 let survOpt = voteOption;
 	 let reqUsr = { "id": USER_ID }
@@ -248,8 +253,61 @@ var app = ( function () {
 	 });
  }
 
- function publicCreateSurvey() {
+ function publicCreateSurvey( elem ) {
+	 let liArr = $(elem).children();
+	 let stats = {};
+	 let surveyObj = {};
 
+	 $.map(liArr, (elm, index) => {
+		 if(index < liArr.length - 1) {
+			 if( $(elm).find('input').attr('id') === 'item' ) {
+				 let iputValue = $(elm).find('input').val().slice('').length;
+				 if (iputValue > 0) {
+				 		stats[$(elm).find('input').val()] = 0;
+				 }
+				 surveyObj["stats"] = stats;
+			 } else if ( $(elm).find('input').attr('id') === 'expiration' ) {
+			   let expValArr = $(elm).find('input').val().split('-');
+				 let expDate = Date.UTC(expValArr[0], (expValArr[1] - 1), (parseInt(expValArr[2]) + 1));
+				 surveyObj[$(elm).find('input').attr('id')] = expDate;
+		   } else {
+				 surveyObj[$(elm).find('input').attr('id')] = $(elm).find('input').val();
+			 }
+		 }
+ 	 });
+
+ // surveyObj = {
+ //  name : "Favorite Icecream",
+ //     "description" : "What is your favorite iceream?",
+ //     "stats" : {
+ // 		 "Chocolate": 0,
+ //       "Vanilla": 0,
+ //       "Strawberry": 0
+ // 	 },
+ //     "expiration" : "1502668800000"
+ // };
+
+	 let path = '/create';
+	 privateAddSurvey(path, surveyObj);
+ }
+
+ function privateAddSurvey(path, surv) {
+	 $.ajax ({
+			 url: BASE_SURVEY + path,
+			 type: "POST",
+			 data: JSON.stringify(surv),
+			 headers: {"x-access-token": TOKEN},
+			 dataType: "json",
+			 contentType: "application/json; charset=utf-8",
+			 success: function( data ){
+				 $('.survey').empty();
+				 privateGetEvents(USER_NAME, USER_TYPE);
+				 window.location.hash = 'dashboard';
+			 },
+			 error: function () {
+					 console.log("failed");
+			 }
+	 });
  }
 
  function publicRemoveSurvey( elem ) {

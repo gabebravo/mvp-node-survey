@@ -56,6 +56,10 @@ function addUserToVoteArray(req, res) {
             survey: survey
           });
         });
+    res.status(200).json({
+      message: 'Your vote was added',
+      survey: survey
+    });
   })
   .catch(
     err => {
@@ -69,15 +73,16 @@ function incrementVote(req, res) {
   .findOne({ _id: req.params.id }, 'users stats')
   .exec()
   .then(survey => {
-    let newStats = survey.stats
+    let newStats = survey.stats;
     let votingTopic = req.body.topic;
-      newStats.forEach(function( obj ){
-        if (obj.hasOwnProperty(votingTopic)) {
-          if (obj[votingTopic]){
-              ++obj[votingTopic];
-          }
-        }
-      });
+
+      for(var key in newStats) {
+        if (newStats.hasOwnProperty(votingTopic)) {
+         if ( key === votingTopic ){
+              ++newStats[key];
+         }
+       }
+      }
       survey.update({stats: newStats}, function (err) {
           if(err) {
             res.status(200).json({message: 'Internal server error'});
@@ -90,6 +95,17 @@ function incrementVote(req, res) {
       console.error(err);
       res.status(500).json({message: 'Internal server error'});
   });
+}
+
+createSurvey = (req, res) => {
+  const survey = new Survey(req.body);
+  survey.save()
+    .then((survey) => {
+      res.status(200).json({survey: survey});
+      //res.status(200).json({message: 'Congrats survey added'});
+    }).catch(err => {
+        res.status(500).send({message: 'Internal server error'});
+    });
 }
 
 function requireAuthenticationOnRoutes() {
@@ -113,7 +129,6 @@ function requireAuthenticationOnRoutes() {
       });
 
     } else {
-
       // if there is no token
       // return an error
       return res.status(403).send({
@@ -130,22 +145,23 @@ router.get('/',    getSurveys);
 router.get('/:id', getSurveyById);
 router.post('/vote/:id', addUserToVoteArray);
 router.post('/increment/:id', incrementVote);
-// router.post('/',   createSurvey);
+router.post('/create',   createSurvey);
 // router.delete('/:id', deleteSurvey);
 
 module.exports = router;
 
 // db.surveys.insertOne(
 //   {
-//     "name" : "Space Travel",
-//     "description" : "Should the US go to the Moon?",
+//     "name" : "Favorite Icecream"",
+//     "description" : "What is your favorite iceream?",
 //     "users" : [
 //       { "id" : "GB123@gmail.com" }
 //     ],
-//     "stats" : [
-//       {"Yes": 72},
-//       {"No": 3}
-//     ],
+//     "stats" : {
+// 		   "Chocolate": 0,
+//       "Vanilla": 0,
+//       "Strawberry": 0
+// 	   },
 //     "expiration" : "1502668800000"
 //   }
 // );

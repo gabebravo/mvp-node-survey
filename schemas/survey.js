@@ -15,7 +15,7 @@ const surveySchema = new mongoose.Schema({
   },
 
   users: { type : Array , "default" : [] },
-  stats: { type : Array , "default" : [] },
+  stats: {},
 
   expiration: {
     type: Date,

@@ -75,10 +75,6 @@ var app = ( function () {
 		render.registerView();
 	}
 
-	// function setUserToken(token) {
-	// 	TOKEN = token;
-	// }
-
 	function publicRegisterNewUser( elem ) {
 			let reqObj = {};
 			let name = "";
@@ -109,6 +105,32 @@ var app = ( function () {
 							console.log("failed");
 					}
 			});
+	}
+
+	function publicRecoverPassword() {
+		$('.login').empty();
+		render.passwordView();
+	}
+
+	function publicSendEmailConfirmation( userEmail ) {
+		let usrEmail = userEmail;
+		let reqObj = { email: usrEmail }
+
+		$.ajax ({
+				url: BASE_USER + "/email",
+				type: "POST",
+				data: JSON.stringify(reqObj),
+				dataType: "json",
+				contentType: "application/json; charset=utf-8",
+				success: function(){
+						console.log("passed");
+						$('.register').empty();
+						render.loginView();
+				},
+				error: function () {
+						console.log("failed");
+				}
+		});
 	}
 
 	function publicBuildChart(ctxObj, data ) {
@@ -224,7 +246,7 @@ var app = ( function () {
   $.ajax ({
  			url: BASE_SURVEY + "/vote/" + survId,
  			type: "POST",
- 		data: JSON.stringify(reqUsr),
+ 		  data: JSON.stringify(reqUsr),
  			headers: {"x-access-token": TOKEN},
  			dataType: "json",
  			contentType: "application/json; charset=utf-8",
@@ -313,19 +335,30 @@ var app = ( function () {
 
  function publicRemoveSurvey( elem ) {
 	var surveyId = $(elem).closest('.row').attr('eventid');
-	// $.delete(DELETE_URL, function(data) {
-	 		// call mongo and remove by ID
-			elem.closest('.row').remove();
-	// });
+	$.ajax ({
+		 url: BASE_SURVEY + "/" + surveyId,
+		 type: "DELETE",
+		 headers: {"x-access-token": TOKEN},
+		 dataType: "json",
+		 contentType: "application/json; charset=utf-8",
+		 success: function( data ){
+			 console.log("survey removed");
+			 elem.closest('.row').remove();
+		 },
+		 error: function () {
+				 console.log("failed");
+		 }
+  });
  }
 
 	return {
 	// publicly accessable function names
-		// fetchToken: getUserToken,
 				startApp: publicStartApp,
 				loginRedirect: publicLoginUser,
 				userHasntVoted: publicCheckIfUserVoted,
 				registerRedirect: publicRegisterUser,
+				passwordRedirect: publicRecoverPassword,
+				passwordEmail: publicSendEmailConfirmation,
 				registerUser: publicRegisterNewUser,
 				buildChart: publicBuildChart,
 				showSurvey: publicGetSurvey,

@@ -30,8 +30,9 @@ var render = {
 		$('.register-link').on('click', function(e) {
 			  app.registerRedirect();
 		});
-		// FORGOT PASS BTN CLICK WILL BE INCORPORATED LATER
-		// g.c.b. 01/17/17
+		$('.password-link').on('click', function(e) {
+			  app.passwordRedirect();
+		});
 
 		$('#login').on('click', function(e) {
 			e.preventDefault();
@@ -62,6 +63,35 @@ var render = {
 			e.preventDefault();
 			let elm = e.target.closest('div');
 				app.registerUser(elm);
+		});
+	},
+
+	passwordView: function() {
+		let $passwordEl = $(`
+		<div class = "register-text">
+			<div class="register-container">
+				<h1>Recover Password</h1>
+				<span><h3>Enter your email below</h3><span>
+					<div class="register-form">
+						<input type="text" id="email" placeholder="email">
+						<button class="password-btn" id="return">Home</button>
+						<button class="password-btn" id="submit">Submit</button>
+					</div>
+			 </div>
+		</div>
+`);
+		$('.register').html($passwordEl);
+
+		$('#submit').on('click', function(e) {
+			e.preventDefault();
+			let elm = e.target.closest('div');
+			let email = $(elm).find('input').val();
+			app.passwordEmail(email);
+		});
+		$('#return').on('click', function(e) {
+			e.preventDefault();
+			$('.register').empty();
+			render.loginView();
 		});
 	},
 

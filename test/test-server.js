@@ -9,46 +9,43 @@ chai.use(chaiHttp);
 describe('Survey api', function() {
 
   // check for server starting
-    // it('should get 200 on user for post', function(done) {
-    //     chai.request(app)
-    //         .post('/user')
-    //         .end(function(err, res) {
-    //             console.log(res.body);
-    //             // res.should.have.status(200);;
-    //             // res.should.be.json;
-    //             //res.body.should.be.a('object');
-    //             done();
-    //         });
-    // });
+    it('should get 200 on user for post', function(done) {
+        chai.request(app)
+            .get('/')
+            .end(function(err, res) {
+                res.should.have.status(200);
+                done();
+            });
+    });
 
     // check post route for new user
-    it('should add a user on POST', function(done) {
-      const newUser = {
-         'name': 'Abraham Lincoln',
-         'email': 'AL123@gmail.com',
-         'password': 'honestabe'
-      }
-        chai.request(app)
-          .post('/user')
-          .send(newUser)
-          .end(function(err, res) {
-              if(err){
-                    should.equal(err, null);
-                    console.log("error");
-                    done(err);
-                }
-                else {
-                    res.should.have.status(200);
-                    res.should.be.json;
-                    // res.body.should.be.a('object');
-                    // res.body.should.include.keys('name', 'email', 'password');
-                    // res.body.title.should.equal(newUser.name);
-                    // res.body.content.should.equal(newUser.email);
-                    // res.body.author.should.equal(newUser.password);
-                    done();
-                }
-          });
-      });
+    // it('should add a user on POST', function(done) {
+    //   const newUser = {
+    //      'name': 'Abraham Lincoln',
+    //      'email': 'AL123@gmail.com',
+    //      'password': 'honestabe'
+    //   }
+    //     chai.request(app)
+    //       .post('/user')
+    //       .send(newUser)
+    //       .end(function(err, res) {
+    //           if(err){
+    //                 should.equal(err, null);
+    //                 console.log("error");
+    //                 done(err);
+    //             }
+    //             else {
+    //                 res.should.have.status(200);
+    //                 res.should.be.json;
+    //                 res.body.should.be.a('object');
+    //                 res.body.should.include.keys('name', 'email', 'password');
+    //                 res.body.title.should.equal(newUser.name);
+    //                 res.body.content.should.equal(newUser.email);
+    //                 res.body.author.should.equal(newUser.password);
+    //                 done();
+    //             }
+    //       });
+    //   });
     //
     //   // check post route for login
     //     it('should confirm login', function(done) {

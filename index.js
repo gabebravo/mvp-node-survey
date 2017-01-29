@@ -7,6 +7,6 @@ db.connect((err) => {
   if (err) {
     return console.log(`DB is not working...`);
   }
-  
+
   server.start();
 });

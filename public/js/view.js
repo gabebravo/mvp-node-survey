@@ -31,7 +31,7 @@ var render = {
 			  app.registerRedirect();
 		});
 		$('.password-link').on('click', function(e) {
-			  app.passwordRedirect();
+			  // app.passwordRedirect();
 		});
 
 		$('#login').on('click', function(e) {

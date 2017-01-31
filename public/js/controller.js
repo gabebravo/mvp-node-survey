@@ -8,7 +8,6 @@ var app = ( function () {
 	const BASE_USER = "/user";
 	const AUTH_URL = "/authenticate";
 	const BASE_SURVEY = '/survey';
-	// const SURVEY_URL = '/survey';
 
   function publicStartApp() {
 		render.loginView();

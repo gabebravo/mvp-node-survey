@@ -27,7 +27,6 @@ function getUsers(req, res) {
 
 createUser = (req, res) => {
   const user = new User(req.body);
-
   user.save()
     .then((user) => {
       res.status(200).json(user);
@@ -129,15 +128,8 @@ emailUser = (req, res) => {
 }
 
 router.post('/authenticate', userLogin);
-// router.get('/test',    homePage);
 router.get('/',    getUsers);
 router.post('/',   createUser);
 router.post('/email', emailUser);
 
 module.exports = router;
-
-// db.users.insertOne({
-// 	  "name": "Melvin Martian",
-//     "email": "MM123@gmail.com",
-//     "password": "looneytunes"
-// });

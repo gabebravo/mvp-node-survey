@@ -157,19 +157,3 @@ router.post('/create',   createSurvey);
 router.delete('/:id', deleteSurvey);
 
 module.exports = router;
-
-// db.surveys.insertOne(
-//   {
-//     "name" : "Favorite Icecream"",
-//     "description" : "What is your favorite iceream?",
-//     "users" : [
-//       { "id" : "GB123@gmail.com" }
-//     ],
-//     "stats" : {
-// 		   "Chocolate": 0,
-//       "Vanilla": 0,
-//       "Strawberry": 0
-// 	   },
-//     "expiration" : "1502668800000"
-//   }
-// );

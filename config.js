@@ -1,5 +1,9 @@
 module.exports = {
-  port  : process.env.PORT || 3000,
+  port  : process.env.PORT || 8080;
   morgan: process.env.MORGAN || 'dev',
-  mongo : process.env.MONGO || 'https://morning-inlet-39864.herokuapp.com/'
+  mongo : process.env.DATABASE_URL ||
+                         global.DATABASE_URL ||
+                         (process.env.NODE_ENV === 'production' ?
+                              'mongodb://surveyAdmin:bravo1@ds137729.mlab.com:37729/survey_db' :
+                              'mongodb://localhost/survey_db')
 };

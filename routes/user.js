@@ -7,9 +7,9 @@ const User = db.mongoose.model('User');
 const jwt = require('jsonwebtoken');
 const SECRET = process.env.JWT_SECRET;
 
-// const email = require("../node_modules/emailjs/email");
-// const USER = process.env.EMAILJS_USER;
-// const PASSWORD = process.env.EMAILJS_PASSWORD;
+const email = require("../node_modules/emailjs/email");
+const USER = process.env.EMAILJS_USER;
+const PASSWORD = process.env.EMAILJS_PASSWORD;
 
 const uuid = require('uuid');
 
@@ -102,8 +102,8 @@ function resetPassword(req, res) {
 //     });
 //
 //     var message = {
-//        text:    "i hope this works",
-//        from:    "Admin <gabriel.bravo1@outlook.com>",
+//        text:    "test email",
+//        from:    "Admin <youremail.com>",
 //        to:      "Gabe <gabecbravo@gmail.com>",
 //        cc:      "",
 //        subject: "testing emailjs",
@@ -113,14 +113,15 @@ function resetPassword(req, res) {
 //        ]
 //     };
 //   server.send(message, function(err, message) { console.log(err || message); });
-//
-//   user.update({reset: tempPass}, function (err) {
-//       if(err) {
-//         res.status(200).json({message: 'Internal server error'});
-//       }
-//         res.status(200).json({message: 'An reset email was sent to you.'});
-//    });
-//
+//   res.status(200).json({message: 'An reset email was sent to you.'});
+
+  // user.update({reset: tempPass}, function (err) {
+  //     if(err) {
+  //       res.status(200).json({message: 'Internal server error'});
+  //     }
+  //       res.status(200).json({message: 'An reset email was sent to you.'});
+  //  });
+
 //   })
 //   .catch( err => {
 //     res.status(500).send(err);

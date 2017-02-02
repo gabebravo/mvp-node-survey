@@ -11,7 +11,7 @@ var render = {
         <span>
             <div class="login-form">
                 <input type="text" id="email" placeholder="email">
-                <input type="text" id="password" placeholder="password">
+                <input type="password" id="password" placeholder="password">
                 <button class="login-btn" id="login">Login</button>
             </div>
             <div class="login-links">
@@ -31,13 +31,20 @@ var render = {
 			  app.registerRedirect();
 		});
 		$('.password-link').on('click', function(e) {
-			  // app.passwordRedirect();
+			//  app.passwordRedirect();
 		});
 
 		$('#login').on('click', function(e) {
 			e.preventDefault();
 			let elm = $(e.target).closest('div');
 			  app.loginRedirect(elm);
+		});
+		$('input').on('keypress', function(e) {
+			if ( event.which == 13 ) {
+				e.preventDefault();
+				let elm = $(e.target).closest('div');
+				  app.loginRedirect(elm);
+			}
 		});
 	},
 
@@ -52,6 +59,7 @@ var render = {
 						<input type="text" id="lastName" placeholder="Last Name">
 						<input type="text" id="email" placeholder="email">
 						<input type="text" id="password" placeholder="password">
+						<button class="register-btn" id="return">Return</button>
 						<button class="register-btn" id="save">Save</button>
 					</div>
 			 </div>
@@ -59,10 +67,33 @@ var render = {
 `);
 		$('.register').html($registerEl);
 
+		$('#return').on('click', function(e) {
+			e.preventDefault();
+			$('.register').empty();
+			render.loginView();
+		});
 		$('#save').on('click', function(e) {
 			e.preventDefault();
 			let elm = e.target.closest('div');
+
+			let userFirstName = $(elm).find('input#firstName').val();
+			let userLastName = $(elm).find('input#lastName').val();
+			let userEmail = $(elm).find('input#email').val();
+			let userPassword = $(elm).find('input#password').val();
+
+			if (userFirstName.length === 0){
+					render.feedbackModal("Invalid Input", "Please enter a First Name.", "Try Again" );
+			} else if (userLastName.length === 0){
+					render.feedbackModal("Invalid Input", "Please enter a Last Name.", "Try Again" );
+			} else if (userEmail.length === 0){
+					render.feedbackModal("Invalid Input", "Please enter an email.", "Try Again" );
+			} else if(!render.validateEmail(userEmail)){
+					render.feedbackModal("Invalid Input", "Please enter a valid email.", "Try Again" );
+			} else if (userPassword.length === 0){
+					render.feedbackModal("Invalid Input", "Please enter a password.", "Try Again" );
+			} else {
 				app.registerUser(elm);
+			}
 		});
 	},
 
@@ -92,6 +123,29 @@ var render = {
 			e.preventDefault();
 			$('.register').empty();
 			render.loginView();
+		});
+	},
+
+	passResetView: function() {
+		passResteEl = (`
+			<div class = "register-text">
+				<div class="register-container">
+					<h1>Password Reset</h1>
+					<span><h3>Enter your email & new password below</h3><span>
+						<div class="register-form">
+							<input type="text" id="email" placeholder="email">
+							<input type="text" id="new-password" placeholder="new password">
+							<button class="password-btn" id="password-submit">Submit</button>
+						</div>
+				 </div>
+			</div>
+			`);
+		$('.password').html(passResteEl);
+		$('#password-submit').on('click', function(e) {
+			e.preventDefault();
+			let elm = e.target.closest('div');
+			let email = $(elm).find('input').val();
+					app.resetPassword();
 		});
 	},
 
@@ -189,7 +243,6 @@ var render = {
 			e.preventDefault();
 			$('.survey').empty();
 			app.loginRedirect(true);
-			window.location.hash = '';
 		});
 		$('.survey-vote').on( 'click', function(e) {
 			e.preventDefault();
@@ -198,7 +251,6 @@ var render = {
 			$('.survey').empty();
 			app.castVote(survId, survBtn);
 			app.incVote(survId, survBtn);
-			window.location.hash = '';
 		});
 
 		let chartMap = new Map();
@@ -227,14 +279,14 @@ var render = {
 	      </li>
 	      <li>
 	        <label for="item1">Survey Item 1</label>
-	        <input type="text" id="item" placeholder="Required">
+	        <input type="text" class="item1" id="item" placeholder="Required">
 	      </li>
 				<li>
 	        <label for="item2">Survey Item 2</label>
-	        <input type="text" id="item" placeholder="Required">
+	        <input type="text" class="item2" id="item" placeholder="Required">
 	      </li>
 				<li>
-	        <label for="item3">Survey Item 2</label>
+	        <label for="item3">Survey Item 3</label>
 	        <input type="text" id="item" placeholder="Optional">
 	      </li>
 				<li>
@@ -261,17 +313,58 @@ var render = {
 
 		$('.srvyfrm-return-btn').on( 'click', function(e) {
 			e.preventDefault();
-			$('.survey').empty();
-			app.loginRedirect();
-			window.location.hash = '';
+			$('.dashboard').empty();
+			app.loginRedirect(true);
 		});
 		$('#submit').on('click', function(e) {
 			e.preventDefault();
 			let elm = $(e.target).closest('ul');
-			$('.survey').empty();
-			app.createSurvey(elm);
-			window.location.hash = '';
+
+			let surveyName = $(elm).find('input#name').val();
+			let surveyDescription = $(elm).find('input#description').val();
+			let surveyItem1 = $(elm).find('input.item1').val();
+			let surveyItem2 = $(elm).find('input.item2').val();
+			let surveyExpiration = $(elm).find('input#expiration').val();
+
+			if (surveyName.length === 0){
+					render.feedbackModal("Invalid Input", "Please enter a survey name.", "Try Again" );
+			} else if (surveyDescription.length === 0){
+					render.feedbackModal("Invalid Input", "Please enter a survey description.", "Try Again" );
+			} else if (surveyItem1.length === 0){
+					render.feedbackModal("Invalid Input", "Please enter the first required survey item.", "Try Again" );
+			} else if (surveyItem2.length === 0){
+					render.feedbackModal("Invalid Input", "Please enter the second required survey item.", "Try Again" );
+			} else if (surveyExpiration.length === 0){
+					render.feedbackModal("Invalid Input", "Please enter an expiration date.", "Try Again" );
+			} else {
+				$('.survey').empty();
+				app.createSurvey(elm);
+			}
 		});
-	}
+	},
+
+	validateEmail: function (email)
+	{
+	    var re = /\S+@\S+\.\S+/;
+	    return re.test(email);
+	},
+
+	feedbackModal: function (title, bodyText, btnText ) {
+			var modalHtml = '';
+			modalHtml += '<div class="modal modal--active">';
+			modalHtml += '<div class="modal__content">';
+			modalHtml += '<a href="#" class="modal__close--js">';
+			modalHtml += '<i class="icon icon-cross"></i></a>';
+			modalHtml += '<h3 class="modal__title">'+title+'</h3>';
+			modalHtml += '<p class="modal__text">'+bodyText+'</p>';
+			modalHtml += '<button class="close-modal btn btn-primary">'+btnText+'</div></div></div>';
+			modalHtml += '<div class="modal__overlay"></div>';
+			$('div.modal-pop').append(modalHtml);
+
+			$('.close-modal').on('click', function( ){
+				$('.modal').remove();
+		    	$('.modal__overlay').remove();
+			});
+		}
 
 }

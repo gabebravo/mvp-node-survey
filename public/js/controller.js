@@ -11,6 +11,7 @@ var app = ( function () {
 
   function publicStartApp() {
 		render.loginView();
+		render.passResetView();
 	}
 
 	function publicLoginUser( elem ) {
@@ -43,7 +44,7 @@ var app = ( function () {
 							privateGetEvents(USER_NAME, USER_TYPE);
 					},
 					error: function () {
-							console.log("failed");
+						console.log("failed");
 					}
 			});
 
@@ -51,7 +52,6 @@ var app = ( function () {
 	}
 
 	function privateGetEvents(user, type) {
-		console.log("this gets called");
 		$.ajax ({
 				url: BASE_SURVEY,
 				type: "GET",
@@ -61,10 +61,10 @@ var app = ( function () {
 				success: function( data ){
 					$('.login').empty();
 					render.dashboardView(type, user, data);
-					window.location.hash = 'dashboard';
 				},
 				error: function () {
 						console.log("failed");
+						render.feedbackModal("Invalid Login", "Please check your email and password.", "Try Again" );
 				}
 		});
   }
@@ -98,9 +98,11 @@ var app = ( function () {
 			    success: function(){
 			        console.log("passed");
 							$('.register').empty();
+							render.feedbackModal("Success", "Your login credentials were added.", "Login Now" );
 							render.loginView();
 			    },
 					error: function () {
+							render.feedbackModal("Server Error", "Please try and register again.", "Try Again" );
 							console.log("failed");
 					}
 			});
@@ -124,10 +126,12 @@ var app = ( function () {
 				success: function(){
 						console.log("passed");
 						$('.register').empty();
+						render.feedbackModal("Success", "A reset link has been sent to your email.", "Return" );
 						render.loginView();
 				},
 				error: function () {
 						console.log("failed");
+						render.feedbackModal("Server Error", "We are experiencing technical diffuculties.", "Try Again" );
 				}
 		});
 	}
@@ -193,7 +197,6 @@ var app = ( function () {
 			 success: function( data ) {
 					$('.dashboard').empty();
 					render.surveyView(data, voteFlag);
-					window.location.hash = 'survey';
 			 },
 			 error: function () {
 					 console.log("failed");
@@ -204,12 +207,10 @@ var app = ( function () {
  function publicLogoutUser() {
 		$('.dashboard').empty();
 		render.loginView();
-		window.location.hash = '';
  }
 
  function publicCheckSurveyExpiration( surveyExpDate ) {
 	 let timeAsMs = Date.parse(surveyExpDate);
-	 // for test purposes: console.log(Date.UTC(2017, 07, 14));
 	 var todaysDate = new Date();
 	 if ( timeAsMs > todaysDate.getTime() ) {
 		 return true;
@@ -240,7 +241,6 @@ var app = ( function () {
   let survId = surveyId;
   let survOpt = voteOption;
   let reqUsr = { "id": USER_ID }
-  // let reqOpt = { "topic": survOpt }
 
   $.ajax ({
  			url: BASE_SURVEY + "/vote/" + survId,
@@ -250,14 +250,11 @@ var app = ( function () {
  			dataType: "json",
  			contentType: "application/json; charset=utf-8",
  			success: function( data ) {
- 			console.log('user sucessfully added');
- 		// 	$('.survey').empty();
- 		// 	privateGetEvents(USER_NAME, USER_TYPE);
- 		// 	window.location.hash = 'dashboard';
- 				// privateAddVote(survId, reqOpt);
+ 				console.log('user sucessfully added');
  			},
  			error: function () {
- 					console.log("failed");
+					console.log("failed");
+					render.feedbackModal("Server Error", "Please try and register again.", "Try Again" );
  			}
  		});
  }
@@ -265,7 +262,6 @@ var app = ( function () {
  function publicIncrementVote( surveyId, voteOption ) {
 	 let survId = surveyId;
 	 let survOpt = voteOption;
-	//  let reqUsr = { "id": USER_ID }
 	 let reqOpt = { "topic": survOpt }
 
 	  $.ajax ({
@@ -276,12 +272,13 @@ var app = ( function () {
 	 		 dataType: "json",
 	 		 contentType: "application/json; charset=utf-8",
 	 		 success: function( data ){
-				 $('.survey').empty();
+				$('.survey').empty();
+				render.feedbackModal("Success", "Your vote was added to the count.", "Continue" );
  				privateGetEvents(USER_NAME, USER_TYPE);
- 				window.location.hash = 'dashboard';
 	 		 },
 	 		 error: function () {
 	 				 console.log("failed");
+					 render.feedbackModal("Server Error", "Please try and register again.", "Try Again" );
 	 		 }
 	  });
  }
@@ -323,11 +320,12 @@ var app = ( function () {
 			 contentType: "application/json; charset=utf-8",
 			 success: function( data ){
 				 $('.survey').empty();
+				 render.feedbackModal("Success", "Your survey is now published.", "Continue" );
 				 privateGetEvents(USER_NAME, USER_TYPE);
-				 window.location.hash = 'dashboard';
 			 },
 			 error: function () {
 					 console.log("failed");
+					 render.feedbackModal("Server Error", "Please try and register again.", "Try Again" );
 			 }
 	 });
  }
@@ -343,11 +341,29 @@ var app = ( function () {
 		 success: function( data ){
 			 console.log("survey removed");
 			 elem.closest('.row').remove();
+			 render.feedbackModal("Success", "Your survey has been deleted.", "Continue" );
 		 },
 		 error: function () {
 				 console.log("failed");
+				 render.feedbackModal("Server Error", "Please try and register again.", "Try Again" );
 		 }
   });
+ }
+
+ function publicPasswordReset() {
+	 $.ajax ({
+			 url: "/password/change",
+			 type: "GET",
+			 headers: {"x-access-token": TOKEN},
+			 dataType: "json",
+			 contentType: "application/json; charset=utf-8",
+			 success: function( data ) {
+					console.log(data);
+			 },
+			 error: function () {
+					 console.log("failed");
+			 }
+	 });
  }
 
 	return {
@@ -367,7 +383,8 @@ var app = ( function () {
 				castVote: publicUserVoteCheck,
 				incVote: publicIncrementVote,
 				deleteSurvey: publicRemoveSurvey,
-				createSurvey: publicCreateSurvey
+				createSurvey: publicCreateSurvey,
+				resetPassword: publicPasswordReset
 		};
 
 })();

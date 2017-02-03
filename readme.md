@@ -1,11 +1,11 @@
 #Custom Survey App
 A fullstack Javascript app for getting user-submitted feedback on surveys.
 
+####Initial Register & Login screens
 ![Screenshots](http://gabrielbravo.net/img/login-register.png)
-###Initial Register & Login screens
 
+####Admin Survey form, User dashboard & Survey data screens
 ![Screenshots](http://gabrielbravo.net/img/survey-dash-chart.png)
-###Admin Survey form, User dashboard & Survey data screens
 
 ##Introduction
 The Survey app allows users to create a username and password for a secure account that is encrypted with bcrypt. The user can then login and view survey data from past surveys, or vote on any new surveys. The UI handles accessibility to new surveys and prevents users from voting more than once. All inner app server requests are protected requiring a temporary Json Web Token.

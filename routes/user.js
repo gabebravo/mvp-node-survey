@@ -7,10 +7,6 @@ const User = db.mongoose.model('User');
 const jwt = require('jsonwebtoken');
 const SECRET = process.env.JWT_SECRET;
 
-const email = require("../node_modules/emailjs/email");
-const USER = process.env.EMAILJS_USER;
-const PASSWORD = process.env.EMAILJS_PASSWORD;
-
 const uuid = require('uuid');
 
 function getUsers(req, res) {
@@ -84,53 +80,8 @@ function resetPassword(req, res) {
   });
 }
 
-// emailUser = (req, res) => {
-//   User.findOne({
-//     email: req.body.email
-//   }, 'name')
-//   .exec()
-//   .then( user => {
-//
-//     let tempPass = uuid.v4();
-//
-//     let username = user.name;
-//     let server  = email.server.connect({
-//        user:    USER,
-//        password: PASSWORD,
-//        host:    "smtp-mail.outlook.com",
-//        tls: {ciphers: "SSLv3"}
-//     });
-//
-//     var message = {
-//        text:    "test email",
-//        from:    "Admin <youremail.com>",
-//        to:      "Gabe <gabecbravo@gmail.com>",
-//        cc:      "",
-//        subject: "testing emailjs",
-//        attachment:
-//        [
-//           {data:'<html>i <i>hope</i> this works! Follow this <a href="heroku.com/name/user/reset/'+ tempPass +'">link</a></html>', alternative:true}
-//        ]
-//     };
-//   server.send(message, function(err, message) { console.log(err || message); });
-//   res.status(200).json({message: 'An reset email was sent to you.'});
-
-  // user.update({reset: tempPass}, function (err) {
-  //     if(err) {
-  //       res.status(200).json({message: 'Internal server error'});
-  //     }
-  //       res.status(200).json({message: 'An reset email was sent to you.'});
-  //  });
-
-//   })
-//   .catch( err => {
-//     res.status(500).send(err);
-//   });
-// }
-
 router.post('/authenticate', userLogin);
 router.get('/',    getUsers);
 router.post('/',   createUser);
-// router.post('/email', emailUser);
 
 module.exports = router;

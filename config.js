@@ -1,13 +1,5 @@
-// module.exports = {
-//    PORT  : process.env.PORT || 3000,
-//    MORGAN: process.env.MORGAN || 'dev',
-//    DATABASE_URL : process.env.MONGO || 'mongodb://localhost:27017/testSurvey'
-//  };
-
-exports.DATABASE_URL = process.env.DATABASE_URL ||
-                       global.DATABASE_URL ||
-                       (process.env.NODE_ENV === 'production' ?
-                            'mongodb://surveyAdmin:bravo1@ds137729.mlab.com:37729/survey_db' :
-                            'mongodb://localhost/survey_db');
-exports.PORT = process.env.PORT || 8080;
-exports.MORGAN = process.env.MORGAN || 'dev';
+module.exports = {
+   PORT  : process.env.PORT || 3000,
+   MORGAN: process.env.MORGAN || 'dev',
+   DATABASE_URL : process.env.MONGO || 'mongodb://localhost:27017/testSurvey'
+ };

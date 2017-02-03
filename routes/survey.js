@@ -98,7 +98,7 @@ createSurvey = (req, res) => {
   survey.save()
     .then(survey => {
       res.status(200).json({survey: survey});
-      //res.status(200).json({message: 'Congrats survey added'});
+      res.status(200).json({message: 'Congrats survey added'});
     }).catch(err => {
         res.status(500).send({message: 'Internal server error'});
     });
